@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mapa Interativo{% endblock %}
+
+{% block styles %}
+<style>
+  /* Estilo para o cursor mudar ao arrastar */
+  #map-container {
+    cursor: grab;
+  }
+
+  #map-container:active {
+    cursor: grabbing;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex-none md:w-72">
+  <div class="p-4 mb-6 rounded-lg shadow-md bg-base-300">
+      <label class="label" for="talhao-selector">
+          <span class="font-semibold label-text">Selecione um Talhão</span>
+      </label>
+      <select id="talhao-selector" class="w-full select select-bordered">
+          <option disabled selected>Carregando talhões...</option>
+      </select>
+  </div>
+
+  <div class="shadow-lg stats stats-vertical">
+      <div class="stat">
+          <div class="text-base stat-title">Talhão</div>
+          <div id="kpi-talhao" class="text-2xl stat-value text-primary">-</div>
+      </div>
+      
+      <div class="stat">
+          <div class="text-base stat-title">Setor</div>
+          <div id="kpi-setor" class="text-2xl stat-value text-secondary">-</div>
+      </div>
+      
+      <div class="stat">
+          <div class="text-base stat-title">Hectares</div>
+          <div id="kpi-hectares" class="text-2xl stat-value">-</div>
+      </div>
+  </div>
+</div>
+
+    <div class="flex-grow">
+        <div
+            id="map-container"
+            class="w-[1200px] h-[700px] border bg-base-100 rounded-lg overflow-hidden flex items-center justify-center shadow-lg"
+            role="region"
+            aria-label="Mapa interativo"
+        >
+            <div class="text-lg text-base-content/50">Selecione um talhão para ver o mapa.</div>
+        </div>
+
+        <div class="flex justify-center gap-2 mt-4 md:justify-start">
+            <button id="zoom-in-btn" class="btn btn-primary btn-sm" aria-label="Aumentar zoom">Zoom +</button>
+            <button id="zoom-out-btn" class="btn btn-primary btn-sm" aria-label="Reduzir zoom">Zoom -</button>
+            <button id="reset-btn" class="btn btn-ghost btn-sm" aria-label="Resetar zoom e posição">Resetar</button>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+    {{ block.super }}
+    
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const talhaoSelector = document.getElementById('talhao-selector');
+            const mapContainer = document.getElementById('map-container');
+            const kpiTalhao = document.getElementById('kpi-talhao');
+            const kpiSetor = document.getElementById('kpi-setor');
+            const kpiHectares = document.getElementById('kpi-hectares');
+            
+            const zoomInBtn = document.getElementById('zoom-in-btn');
+            const zoomOutBtn = document.getElementById('zoom-out-btn');
+            const resetBtn = document.getElementById('reset-btn');
+
+            async function populateTalhaoSelector() {
+                try {
+                    // ✅ CORREÇÃO AQUI: Adicionar o prefixo /data/
+                    const response = await fetch('/data/api/lista-talhoes/');
+                    if (!response.ok) throw new Error('Falha ao carregar lista de talhões.');
+                    
+                    const talhoes = await response.json();
+                    
+                    talhaoSelector.innerHTML = '<option disabled selected>Selecione um talhão</option>';
+                    
+                    talhoes.forEach(talhao => {
+                        const option = document.createElement('option');
+                        option.value = talhao.CodTalhao;
+                        option.textContent = talhao.Talhao;
+                        talhaoSelector.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    talhaoSelector.innerHTML = '<option disabled selected>Erro ao carregar</option>';
+                }
+            }
+
+            async function loadMapData(codigoTalhao) {
+                if (!codigoTalhao) return;
+                
+                mapContainer.innerHTML = `<div>Carregando...</div>`;
+                kpiTalhao.textContent = "-";
+                kpiSetor.textContent = "-";
+                kpiHectares.textContent = "-";
+
+                try {
+                    // ✅ CORREÇÃO AQUI: Adicionar o prefixo /data/
+                    const response = await fetch(`/data/api/mapa/${codigoTalhao}/`);
+                    if (!response.ok) throw new Error('Talhão não encontrado.');
+
+                    const data = await response.json();
+
+                    kpiTalhao.textContent = data.Talhao;
+                    kpiSetor.textContent = data.Setor;
+                    kpiHectares.textContent = data.HectaresTotais.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+                    const img = document.createElement('img');
+                    img.id = 'svg-map';
+                    img.className = 'max-w-none';
+                    img.alt = `Mapa para ${data.Talhao}`;
+                    
+                    img.onload = () => {
+                        mapContainer.innerHTML = '';
+                        mapContainer.appendChild(img);
+                        
+                        const pz = Panzoom(img, {
+                            maxScale: 10,
+                            minScale: 0.5,
+                            canvas: true 
+                        });
+
+                        mapContainer.addEventListener('wheel', pz.zoomWithWheel);
+                        zoomInBtn.addEventListener('click', pz.zoomIn);
+                        zoomOutBtn.addEventListener('click', pz.zoomOut);
+                        resetBtn.addEventListener('click', pz.reset);
+
+                        console.log("Panzoom inicializado com sucesso!");
+                    };
+                    
+                    img.onerror = () => {
+                        throw new Error('Falha ao carregar a imagem do mapa SVG.');
+                    };
+
+                    img.src = data.SVG;
+
+                } catch (error) {
+                    console.error('Erro ao carregar dados do mapa:', error);
+                    mapContainer.innerHTML = `<div class="p-4 text-error">${error.message}</div>`;
+                }
+            }
+
+            talhaoSelector.addEventListener('change', (event) => {
+                const selectedTalhaoCode = event.target.value;
+                loadMapData(selectedTalhaoCode);
+            });
+
+            populateTalhaoSelector();
+        });
+    </script>
+{% endblock %}

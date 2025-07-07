@@ -1,0 +1,41 @@
+{% load static %}
+<aside class="sticky top-0 flex-shrink-0 hidden w-64 h-screen shadow-lg bg-base-100 lg:block">
+    <div class="flex items-center justify-center p-4 border-b border-base-300">
+      <h1 class="text-2xl font-bold text-primary">Dashboard</h1>
+    </div>
+    
+    <ul class="w-full p-4 menu text-base-content">
+      <li class="menu-title"><span>Principal</span></li>
+      <li>
+        <a class="active" href="/data">
+          <i data-lucide="layout-dashboard"></i>
+          Safras
+        </a>
+      </li>
+      <li>
+        <a>
+          <i data-lucide="bar-chart-3"></i>
+          Analytics
+        </a>
+      </li>
+      <li>
+          <a href="maps">
+          <i data-lucide="file-text"></i>
+          Mapas
+        </a>
+      </li>
+      <li class="menu-title"><span>Relatórios</span></li>
+      <li>
+        <a>
+          <i data-lucide="users"></i>
+          Funcionarios
+        </a>
+      </li>
+      <li>
+        <a>
+          <i data-lucide="shopping-cart"></i>
+          Fornecedores
+        </a>
+      </li>
+    </ul>
+  </aside>

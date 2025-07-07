@@ -1,0 +1,29 @@
+[project]
+name = "dashboarding"
+version = "0.0.1"
+description = "Desemvolvimento do Dashboard e repositorio da aguaazul e Pindorama"
+authors = [
+    {name = "jean Melo"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11.8,<4.0"
+
+dependencies = [
+    "django (>=5.2.3,<6.0.0)",
+    "polars (>=1.31.0,<2.0.0)",
+    "django-browser-reload (>=1.18.0,<2.0.0)",
+    "adlfs (>=2024.12.0,<2025.0.0)",
+    "django-tailwind (>=4.0.1,<5.0.0)",
+    "python-decouple (>=3.8,<4.0)",
+    "whitenoise (>=6.9.0,<7.0.0)",
+    "dj-database-url (>=3.0.1,<4.0.0)",
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "django-cors-headers (>=4.7.0,<5.0.0)",
+    "git-filter-repo (>=2.47.0,<3.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

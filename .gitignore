@@ -1,0 +1,18 @@
+# Arquivo de variáveis de ambiente (contém segredos)
+.env
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Banco de dados SQLite (não deve ir para produção)
+db.sqlite3
+
+# Pasta de arquivos estáticos coletados (gerada pelo collectstatic)
+staticfiles/
+
+# Adiciona o novo arquivo .gitignore ao commit
+git add .gitignore
+
+# Faz o "amend", que corrige o commit anterior com as novas mudanças
+git commit --amend --no-edit

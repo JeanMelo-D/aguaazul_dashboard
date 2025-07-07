@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="halloween">
+
+  {% comment %} tema padrão: "forest" pindorama {% endcomment %}
+  {% comment %} tema padrão: "dark" Aguaazul {% endcomment %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Dashboard - Água Azul {% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        display: flex;
+        min-height: 100vh;
+        background-color: hsl(var(--b2));
+      }
+      .main-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+</head>
+
+<body class="text-base-content">
+ 
+    {% include 'partials/_sidebar.html' %}
+
+    <div class="main-content">
+        {% include 'partials/_header.html' %}
+
+        <main class="flex-grow p-4 lg:p-8">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/pannzoom@9.4.3/dist/pannzoom.min.js"></script>
+    
+    <script src="{% static 'js/sorttable/sorttable.js' %}"></script>
+    
+    <script>
+      lucide.createIcons();
+    </script>
+    
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

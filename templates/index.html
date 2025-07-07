@@ -1,0 +1,681 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Visão Geral -
+Colheita{% endblock %} {% block content %}
+
+<div class="tabs tabs-lift">
+  <input
+    type="radio"
+    name="my_tabs"
+    role="tab"
+    class="tab whitespace-nowrap"
+    aria-label="Dashboard Colheita 🌾"
+    checked
+  />
+  <div
+    role="tabpanel"
+    class="p-6 tab-content bg-base-100 border-base-300 rounded-box whitespace-nowrap"
+  >
+    <div class="mb-6">
+      <h1 class="text-7xl font-extralight text-primary">Safras - Colheita</h1>
+      <p class="text-base-content/70" id="current-date"></p>
+    </div>
+    <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="shadow-2xl stat">
+          <div class="stat-title">Total Sacas Líquidas</div>
+          <div
+            class="text-primary font-extralight stat-value"
+            id="kpi-total-sacas-liquidas"
+          >
+            0
+          </div>
+          <div class="stat-desc">Líquido (60kg)</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title">Total Sacas Brutas</div>
+          <div
+            class="text-primary stat-value font-extralight"
+            id="kpi-total-sacas-brutas"
+          >
+            0
+          </div>
+          <div class="stat-desc">Bruto (60kg)</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title">Hectares Colhidos</div>
+          <div class="stat-value font-extralight" id="kpi-total-hectares">
+            0.00
+          </div>
+          <div class="stat-desc">Hectares</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title">Média Líquida</div>
+          <div
+            class="text-warning stat-value font-extralight"
+            id="kpi-media-liquida"
+          >
+            0.00
+          </div>
+          <div class="stat-desc">Sc / Ha</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title">Média Bruta</div>
+          <div
+            class="text-warning stat-value font-extralight"
+            id="kpi-media-bruta"
+          >
+            0.00
+          </div>
+          <div class="stat-desc">Sc / Ha</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title">Nº de Talhões</div>
+          <div class="stat-value font-extralight" id="kpi-num-talhoes">0</div>
+          <div class="stat-desc">Na seleção atual</div>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 mb-6 shadow-2xl card bg-base-300 md:p-6">
+      <div class="p-2 card-body md:p-8">
+        <h2 class="mb-4 card-title">Filtrar Dados</h2>
+        <div
+          class="grid items-end grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"
+        >
+          <div class="w-full form-control">
+            <label class="label" for="safraSelect"
+              ><span class="label-text">Safra</span></label
+            >
+            <select id="safraSelect" class="select select-bordered">
+              <option value="">Todas as Safras</option>
+            </select>
+          </div>
+          <div class="w-full form-control">
+            <label class="label" for="culturaSelect"
+              ><span class="label-text">Cultura</span></label
+            >
+            <select id="culturaSelect" class="select select-bordered">
+              <option value="">Todas as Culturas</option>
+            </select>
+          </div>
+          <div class="w-full form-control">
+            <label class="label" for="talhaoSelect"
+              ><span class="label-text">Talhão</span></label
+            >
+            <select id="talhaoSelect" class="select select-bordered">
+              <option value="">Todos os Talhões</option>
+            </select>
+          </div>
+          <div class="w-full form-control">
+            <button id="applyFiltersBtn" class="btn btn-primary">
+              Aplicar Filtros
+            </button>
+          </div>
+        </div>
+        <div
+          id="loading"
+          class="flex items-center gap-2 mt-4"
+          style="display: none"
+        >
+          <span class="loading loading-spinner loading-sm"></span
+          ><span>Carregando...</span>
+        </div>
+      </div>
+    </div>
+    <div class="w-full mx-auto">
+      <div class="rounded-lg shadow-2xl radio-primary card bg-base-300">
+        <div class="card-body">
+          <div class="overflow-x-auto">
+            <table
+              class="table w-full text-sm table-sm table-hover sortable"
+              id="resultsTable"
+            >
+              <thead class="rounded-lg">
+                <tr></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% comment %} Segunda tabela - contratos {% endcomment %}
+  <input
+    type="radio"
+    name="my_tabs"
+    role="tab"
+    class="tab whitespace-nowrap"
+    aria-label="Análise de Contratos"
+  />
+  <div
+    role="tabpanel"
+    class="p-6 tab-content bg-base-100 border-base-300 rounded-box min-h-[400px]"
+  >
+    <div class="mb-6">
+      <h1 class="text-7xl font-extralight text-secondary-content">
+        Contratos - Vendas
+      </h1>
+      <p class="text-base-content/70" id="current-date-contratos"></p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title text-info-content">Total Fixado</div>
+          <div
+            class="text-secondary font-extralight stat-value"
+            id="kpi-contrato-fixado"
+          >
+            0,00
+          </div>
+          <div class="stat-desc">Sacas (60kg)</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title text-info-content">Total Entregue</div>
+          <div
+            class="text-secondary-content font-extralight stat-value"
+            id="kpi-contrato-entregue"
+          >
+            0,00
+          </div>
+          <div class="stat-desc">Sacas (60kg)</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title text-info-content">Saldo a Entregar</div>
+          <div
+            class="text-secondary font-extralight stat-value"
+            id="kpi-contrato-saldo"
+          >
+            0,00
+          </div>
+          <div class="stat-desc">Sacas (60kg)</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title text-info-content">Faturamento Total</div>
+          <div
+            class="text-secondary-content font-extralight stat-value"
+            id="kpi-contrato-faturamento"
+          >
+            0,00
+          </div>
+          <div class="stat-desc">R$</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title text-info-content">Preço Médio</div>
+          <div
+            class="text-success font-extralight stat-value"
+            id="kpi-contrato-preco-medio"
+          >
+            0,00
+          </div>
+          <div class="stat-desc">R$ / Saca</div>
+        </div>
+      </div>
+      <div class="shadow-lg shadow-primary stats bg-primary-content">
+        <div class="stat">
+          <div class="stat-title text-info-content">Nº de Contratos</div>
+          <div
+            class="text-secondary-content stat-value font-extralight"
+            id="kpi-contrato-quantidade"
+          >
+            0
+          </div>
+          <div class="stat-desc">Na seleção atual</div>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 mb-6 shadow-2xl card bg-base-300 md:p-6">
+      <div class="p-2 card-body md:p-8">
+        <h2 class="mb-4 card-title">Filtrar Contratos</h2>
+        <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-4">
+          <div class="w-full form-control">
+            <label class="label" for="contratoSafraSelect"
+              ><span class="label-text">Safra</span></label
+            >
+            <select id="contratoSafraSelect" class="select select-bordered">
+              <option value="">Todas as Safras</option>
+            </select>
+          </div>
+          <div class="w-full form-control">
+            <label class="label" for="contratoCommoditieSelect"
+              ><span class="label-text">Commoditie</span></label
+            >
+            <select
+              id="contratoCommoditieSelect"
+              class="select select-bordered"
+            >
+              <option value="">Todas as Commodities</option>
+            </select>
+          </div>
+          <div class="w-full form-control">
+            <label class="label" for="contratoClienteSelect"
+              ><span class="label-text">Cliente</span></label
+            >
+            <select id="contratoClienteSelect" class="select select-bordered">
+              <option value="">Todos os Clientes</option>
+            </select>
+          </div>
+          <div class="w-full form-control">
+            <button id="applyContratosFiltersBtn" class="btn btn-primary">
+              Aplicar Filtros
+            </button>
+          </div>
+        </div>
+        <div
+          id="loadingContratos"
+          class="flex items-center gap-2 mt-4"
+          style="display: none"
+        >
+          <span class="loading loading-spinner loading-sm"></span
+          ><span>Carregando...</span>
+        </div>
+      </div>
+    </div>
+    <div class="w-full mx-auto">
+      <div class="rounded-lg shadow-2xl card bg-base-300">
+        <div class="card-body">
+          <div class="overflow-x-auto">
+            <table
+              class="table w-full text-sm table-sm table-hover sortable"
+              id="contratosTabela"
+            >
+              <thead class="rounded-lg">
+                <tr></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %} {% block scripts %}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // --- 1. FUNÇÕES GLOBAIS E FORMATADORES ---
+      // Formatador para números decimais (ex: 1.234,56)
+      const decimalFormatter = new Intl.NumberFormat("pt-BR", {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      // Formatador para números inteiros (ex: 1.234)
+      const integerFormatter = new Intl.NumberFormat("pt-BR", {
+        style: "decimal",
+        maximumFractionDigits: 0,
+      });
+
+      /**
+       * Formata um valor como um decimal no padrão pt-BR.
+       * Seguro para valores nulos, indefinidos ou não-numéricos.
+       * @param {*} value O valor a ser formatado.
+       * @returns {string} O valor formatado como "0,00" ou no formato correto.
+       */
+      function formatDecimal(value) {
+        if (value === null || value === undefined) return "0,00";
+        // Garante que o separador decimal seja um ponto para o parseFloat
+        const number = parseFloat(String(value).replace(",", "."));
+        return isNaN(number) ? "0,00" : decimalFormatter.format(number);
+      }
+
+      /**
+       * Formata um valor como um inteiro no padrão pt-BR.
+       * Converte o valor para inteiro de forma segura, evitando erros com decimais.
+       * @param {*} value O valor a ser formatado.
+       * @returns {string} O valor formatado como "0" ou no formato correto.
+       */
+      function formatInteger(value) {
+        if (value === null || value === undefined) return "0";
+        // Converte para inteiro de forma segura, ignorando casas decimais
+        const number = parseInt(String(value).replace(",", "."), 10);
+        return isNaN(number) ? "0" : integerFormatter.format(number);
+      }
+
+      /**
+       * Exibe a data atual em um elemento da página.
+       * @param {string} elementId O ID do elemento onde a data será exibida.
+       */
+      function displayCurrentDate(elementId) {
+        const today = new Date();
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const dateElement = document.getElementById(elementId);
+        if (dateElement) {
+          dateElement.textContent = today.toLocaleDateString("pt-BR", options);
+        }
+      }
+
+      /**
+       * Preenche uma tabela HTML com dados, aplicando formatação seletiva.
+       * @param {HTMLTableElement} tableElement - O elemento da tabela.
+       * @param {Array<Object>} data - Os dados para preencher a tabela.
+       */
+      function populateTable(tableElement, data) {
+        const tableHead = tableElement.querySelector("thead tr");
+        const tableBody = tableElement.querySelector("tbody");
+
+        tableHead.innerHTML = "";
+        tableBody.innerHTML = "";
+
+        if (!data || data.length === 0) {
+          tableHead.innerHTML = "<th>Aviso</th>";
+          tableBody.innerHTML =
+            "<tr><td>Nenhum dado encontrado para os filtros selecionados.</td></tr>";
+          return;
+        }
+
+        const headers = Object.keys(data[0]);
+        headers.forEach((header) => {
+          const th = document.createElement("th");
+          th.classList.add('bg-primary', 'text-primary-content','rounded');
+          th.textContent = header
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase());
+          tableHead.appendChild(th);
+        });
+
+        data.forEach((row) => {
+          const tr = document.createElement("tr");
+            tr.classList.add('whitespace-nowrap', 'hover:bg-primary', 'hover:text-primary-content');
+          headers.forEach((header) => {
+            const td = document.createElement("td");
+            td.classList.add('whitespace-nowrap');
+
+            const value = row[header];
+
+            // Lógica de formatação seletiva (continua igual)
+            if (
+              typeof value === "number" ||
+              (typeof value === "string" &&
+                value.trim() !== "" &&
+                !isNaN(String(value).replace(",", ".")))
+            ) {
+              if (
+                Number.isInteger(parseFloat(String(value).replace(",", "."))) ||
+                header.toLowerCase().includes("sacas") ||
+                header.toLowerCase().includes("quantidade")
+              ) {
+                td.textContent = formatInteger(value);
+              } else {
+                td.textContent = formatDecimal(value);
+              }
+            } else {
+              td.textContent = value;
+            }
+            tr.appendChild(td);
+          });
+          tableBody.appendChild(tr);
+        });
+
+        if (typeof sorttable !== "undefined") {
+          sorttable.makeSortable(tableElement);
+        }
+      }
+
+      // ===================================================================
+      // --- 🌾 LÓGICA DO DASHBOARD DE COLHEITA ---
+      // ===================================================================
+      const colheita = {
+        safraSelect: document.getElementById("safraSelect"),
+        culturaSelect: document.getElementById("culturaSelect"),
+        talhaoSelect: document.getElementById("talhaoSelect"),
+        applyBtn: document.getElementById("applyFiltersBtn"),
+        loadingDiv: document.getElementById("loading"),
+        table: document.getElementById("resultsTable"),
+        kpis: {
+          totalSacasLiquidas: document.getElementById(
+            "kpi-total-sacas-liquidas"
+          ),
+          totalSacasBrutas: document.getElementById("kpi-total-sacas-brutas"),
+          totalHectares: document.getElementById("kpi-total-hectares"),
+          mediaLiquida: document.getElementById("kpi-media-liquida"),
+          mediaBruta: document.getElementById("kpi-media-bruta"),
+          numTalhoes: document.getElementById("kpi-num-talhoes"),
+        },
+
+        async populateFilters() {
+          try {
+            const response = await fetch("/data/api/filter-options/");
+            if (!response.ok)
+              throw new Error("Falha ao carregar opções de filtro.");
+            const options = await response.json();
+
+            options.safras.forEach((safra) =>
+              this.safraSelect.add(new Option(safra, safra))
+            );
+            options.culturas.forEach((cultura) =>
+              this.culturaSelect.add(new Option(cultura, cultura))
+            );
+            options.talhoes.forEach((talhao) =>
+              this.talhaoSelect.add(new Option(talhao, talhao))
+            );
+
+            if (options.safras && options.safras.length > 0)
+              this.safraSelect.value = options.safras[0];
+
+            const currentMonth = new Date().getMonth() + 1;
+            const defaultCultura =
+              currentMonth >= 1 && currentMonth <= 6 ? "SOJA" : "MILHO";
+            if (options.culturas && options.culturas.includes(defaultCultura)) {
+              this.culturaSelect.value = defaultCultura;
+            }
+          } catch (error) {
+            console.error("Erro ao popular filtros de colheita:", error);
+          }
+        },
+
+        async fetchData() {
+          this.loadingDiv.style.display = "flex";
+          const params = new URLSearchParams({
+            ...(this.safraSelect.value && { safra: this.safraSelect.value }),
+            ...(this.culturaSelect.value && {
+              cultura: this.culturaSelect.value,
+            }),
+            ...(this.talhaoSelect.value && { talhao: this.talhaoSelect.value }),
+          });
+
+          try {
+            const response = await fetch(
+              `/data/api/colheita-data/?${params.toString()}`
+            );
+            if (!response.ok)
+              throw new Error(
+                (await response.json()).error || "Erro no servidor"
+              );
+
+            const { kpis, tableData } = await response.json();
+
+            this.kpis.totalSacasLiquidas.textContent =
+              kpis.total_sacas_colhidas;
+            this.kpis.totalSacasBrutas.textContent = kpis.total_sacas_brutas;
+            this.kpis.numTalhoes.textContent = formatInteger(
+              kpis.numero_talhoes
+            );
+            this.kpis.totalHectares.textContent = kpis.total_hectares_colhidos;
+            this.kpis.mediaLiquida.textContent = formatDecimal(
+              kpis.media_liquida_sc_ha
+            );
+            this.kpis.mediaBruta.textContent = formatDecimal(
+              kpis.media_bruta_sc_ha
+            );
+
+            populateTable(this.table, tableData);
+          } catch (error) {
+            console.error("Erro ao buscar dados de colheita:", error);
+            const tableHead = this.table.querySelector("thead tr");
+            const tableBody = this.table.querySelector("tbody");
+            tableHead.innerHTML = "<th>Erro</th>";
+            tableBody.innerHTML = `<tr><td class="text-error">${error.message}</td></tr>`;
+          } finally {
+            this.loadingDiv.style.display = "none";
+          }
+        },
+
+        async init() {
+          displayCurrentDate("current-date");
+          this.applyBtn.addEventListener("click", () => this.fetchData());
+          await this.populateFilters();
+          this.fetchData();
+        },
+      };
+
+      // ===================================================================
+      // --- 📄 LÓGICA DO DASHBOARD DE CONTRATOS ---
+      // ===================================================================
+      const contratos = {
+        safraSelect: document.getElementById("contratoSafraSelect"),
+        commoditieSelect: document.getElementById("contratoCommoditieSelect"),
+        clienteSelect: document.getElementById("contratoClienteSelect"),
+        applyBtn: document.getElementById("applyContratosFiltersBtn"),
+        loadingDiv: document.getElementById("loadingContratos"),
+        table: document.getElementById("contratosTabela"),
+        kpis: {
+          totalFixado: document.getElementById("kpi-contrato-fixado"),
+          totalEntregue: document.getElementById("kpi-contrato-entregue"),
+          saldo: document.getElementById("kpi-contrato-saldo"),
+          faturamento: document.getElementById("kpi-contrato-faturamento"),
+          precoMedio: document.getElementById("kpi-contrato-preco-medio"),
+          quantidade: document.getElementById("kpi-contrato-quantidade"),
+        },
+        isDataLoaded: false, // Flag para carregar dados apenas uma vez
+
+        async populateFilters() {
+          try {
+            const response = await fetch("/data/api/contratos-filter-options/");
+            if (!response.ok)
+              throw new Error(
+                "Falha ao carregar opções de filtro de contratos."
+              );
+            const options = await response.json();
+
+            options.safras.forEach((safra) =>
+              this.safraSelect.add(new Option(safra, safra))
+            );
+            options.commodities.forEach((c) =>
+              this.commoditieSelect.add(new Option(c, c))
+            );
+            options.clientes.forEach((c) =>
+              this.clienteSelect.add(new Option(c, c))
+            );
+
+            // ✅ INÍCIO DA LÓGICA PARA ENCONTRAR A MAIOR SAFRA
+            if (options.safras && options.safras.length > 0) {
+              // Usa o método 'reduce' para encontrar a maior string (safra mais recente) no array
+              const maiorSafra = options.safras.reduce((a, b) =>
+                a > b ? a : b
+              );
+
+              // Define o valor do seletor para a maior safra encontrada
+              this.safraSelect.value = maiorSafra;
+            }
+            // ✅ FIM DA LÓGICA
+
+            // Lógica de condição por mês (continua a mesma)
+            const currentMonth = new Date().getMonth() + 1;
+            const defaultCommoditie =
+              currentMonth >= 1 && currentMonth <= 6 ? "SOJA" : "MILHO";
+            if (
+              options.commodities &&
+              options.commodities.includes(defaultCommoditie)
+            ) {
+              this.commoditieSelect.value = defaultCommoditie;
+            }
+          } catch (error) {
+            console.error("Erro ao popular filtros de contratos:", error);
+          }
+        },
+
+        async fetchData() {
+          this.isDataLoaded = true; // Marca que os dados foram carregados (ou a tentativa foi feita)
+          this.loadingDiv.style.display = "flex";
+          const params = new URLSearchParams({
+            ...(this.safraSelect.value && { safra: this.safraSelect.value }),
+            ...(this.commoditieSelect.value && {
+              commoditie: this.commoditieSelect.value,
+            }),
+            ...(this.clienteSelect.value && {
+              cliente: this.clienteSelect.value,
+            }),
+          });
+
+          try {
+            const response = await fetch(
+              `/data/api/contratos-data/?${params.toString()}`
+            );
+            if (!response.ok)
+              throw new Error(
+                (await response.json()).error || "Erro no servidor"
+              );
+
+            const { KpiContrato, ContratoData } = await response.json();
+
+            this.kpis.totalFixado.textContent = KpiContrato.Total_Fixado;
+            this.kpis.totalEntregue.textContent = KpiContrato.Total_Entregue;
+            this.kpis.saldo.textContent = KpiContrato.Total_Saldo;
+            this.kpis.faturamento.textContent = KpiContrato.Total_Faturamento;
+            this.kpis.precoMedio.textContent = KpiContrato.Preco_medio_sc;
+            this.kpis.quantidade.textContent = formatInteger(
+              KpiContrato.Quantidade_Contratos
+            );
+
+            populateTable(this.table, ContratoData);
+          } catch (error) {
+            console.error("Erro ao buscar dados de contratos:", error);
+            const tableHead = this.table.querySelector("thead tr");
+            const tableBody = this.table.querySelector("tbody");
+            tableHead.innerHTML = "<th>Erro</th>";
+            tableBody.innerHTML = `<tr><td class="text-error">${error.message}</td></tr>`;
+          } finally {
+            this.loadingDiv.style.display = "none";
+          }
+        },
+
+        // Init modificado para não buscar dados imediatamente
+        async init() {
+          displayCurrentDate("current-date-contratos");
+          this.applyBtn.addEventListener("click", () => this.fetchData());
+          await this.populateFilters();
+        },
+      };
+
+      // --- INICIALIZAÇÃO GERAL ---
+      colheita.init(); // Inicia e busca dados do dashboard de colheita imediatamente.
+      contratos.init(); // Apenas inicializa filtros e listeners da aba de contratos.
+
+      // Adiciona um listener para a aba de contratos
+      const contratoTab = document.querySelector(
+        'input[aria-label="Análise de Contratos 📄"]'
+      );
+      if (contratoTab) {
+        contratoTab.addEventListener("click", () => {
+          // Carrega os dados da aba de contratos apenas na primeira vez que ela for clicada.
+          if (!contratos.isDataLoaded) {
+            contratos.fetchData();
+          }
+        });
+      }
+    });
+  </script>
+  {% endblock scripts %}
+</div>
