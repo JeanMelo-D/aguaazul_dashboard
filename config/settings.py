@@ -17,6 +17,8 @@ SECRET_KEY = config('SECRET_KEY')
 
 # DEBUG deve ser False em produção para não expor informações sensíveis.
 # O config('DEBUG', default=False, cast=bool) permite ligá-lo em desenvolvimento com um .env
+
+
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Adiciona os domínios que podem acessar sua aplicação.
@@ -76,11 +78,11 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.django',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        'context_processors': [
+        'django.template.context_processors.debug',  # LINHA CORRIGIDA
+        'django.template.context_processors.request',
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
             ],
         },
     },
