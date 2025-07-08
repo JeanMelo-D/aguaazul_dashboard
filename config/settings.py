@@ -24,7 +24,9 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # Adiciona os domínios que podem acessar sua aplicação.
 ALLOWED_HOSTS = [
     'pindoramadashboard-hsfgc7ajhaaxcwgv.brazilsouth-01.azurewebsites.net',
-    'www.fazaguaazul.com',  # Adicione seu domínio customizado se tiver
+    'https://fazaguaazul.com',
+    "https://www.fazaguaazul.com",
+    'fazaguaazul.com',# Adicione seu domínio customizado se tiver
     '127.0.0.1',
     'localhost',
 ]
