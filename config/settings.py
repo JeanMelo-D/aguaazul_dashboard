@@ -166,6 +166,7 @@ CORS_ALLOWED_ORIGINS = [
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
+CSRF_TRUSTED_ORIGINS = ['https://fazaguaazul.com'] 
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
