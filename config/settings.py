@@ -5,6 +5,7 @@ from pathlib import Path
 from decouple import config
 import dj_database_url
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,8 +19,8 @@ SECRET_KEY = config('SECRET_KEY')
 # DEBUG deve ser False em produção para não expor informações sensíveis.
 # O config('DEBUG', default=False, cast=bool) permite ligá-lo em desenvolvimento com um .env
 
-
 DEBUG = config('DEBUG', default=False, cast=bool)
+# DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Adiciona os domínios que podem acessar sua aplicação.
 ALLOWED_HOSTS = [
@@ -42,21 +43,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Apps de terceiros
+    # Apps de viadagem
     'tailwind',
+    'ninetail',
     'whitenoise', # Adicionado para servir arquivos estáticos de forma otimizada
     'corsheaders', # Recomendado para APIs
-    # Seus apps
+    # meus apps
     'pipeline',
     'data',
-    'cool',
     'maps',
     # 'django_browser_reload', # REMOVIDO: Ferramenta apenas para desenvolvimento.
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # ✅ WhiteNoise Middleware posicionado corretamente, logo após o SecurityMiddleware.
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware', # Middleware do django-cors-headers
@@ -90,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-TAILWIND_APP_NAME = 'cool'
+TAILWIND_APP_NAME = 'ninetail'
 
 # ✅ REMOVIDO: NPM_BIN_PATH não é necessário e causaria erro no Azure (Linux).
 # A biblioteca django-tailwind encontrará o npm automaticamente no ambiente de build.
@@ -133,10 +133,12 @@ STATIC_URL = '/static/'
 
 # Diretórios onde o Django procura por arquivos estáticos (além das pastas 'static' dos apps).
 STATICFILES_DIRS = [
-    BASE_DIR / 'cool/static'
+    BASE_DIR / 'ninetail/static'
 ]
 
-# Pasta de destino para onde o `collectstatic` irá copiar todos os arquivos.
+# # Pasta de destino para onde o `collectstatic` irá copiar todos os arquivos.
+# STATIC_ROOT = BASE_DIR / 'staticfiles'  ## DESCOMENTAR SOMENTE EM PRODUÇÃO
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Mecanismo de armazenamento para o WhiteNoise, que comprime e versiona os arquivos.
@@ -156,5 +158,14 @@ CORS_ALLOWED_ORIGINS = [
 # ==============================================================================
 # CONFIGURAÇÕES GERAIS
 # ==============================================================================
+
+# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd" ## COMENTAR PARA PRODUÇÃO
+
+# config/settings.py
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

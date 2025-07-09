@@ -4,166 +4,213 @@
 {% block title %}Mapa Interativo{% endblock %}
 
 {% block styles %}
+{{ block.super }}
 <style>
   /* Estilo para o cursor mudar ao arrastar */
-  #map-container {
+  #map-container.has-map {
     cursor: grab;
   }
 
-  #map-container:active {
+  #map-container.has-map:active {
     cursor: grabbing;
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="flex-none md:w-72">
-  <div class="p-4 mb-6 rounded-lg shadow-md bg-base-300">
-      <label class="label" for="talhao-selector">
-          <span class="font-semibold label-text">Selecione um Talhão</span>
-      </label>
-      <select id="talhao-selector" class="w-full select select-bordered">
-          <option disabled selected>Carregando talhões...</option>
-      </select>
-  </div>
+<div class="flex flex-col gap-8 lg:flex-row">
 
-  <div class="shadow-lg stats stats-vertical">
-      <div class="stat">
-          <div class="text-base stat-title">Talhão</div>
-          <div id="kpi-talhao" class="text-2xl stat-value text-primary">-</div>
+  <aside class="flex-none lg:w-80 xl:w-96">
+    <div class="flex flex-col gap-6">
+      <div class="shadow-xl card bg-base-100">
+        <div class="card-body">
+          <h2 class="card-title">Painel de Controle</h2>
+          <label class="label" for="talhao-selector">
+            <span class="label-text">Selecione um Talhão</span>
+          </label>
+          <select id="talhao-selector" class="w-full select select-bordered">
+            <option disabled selected>Carregando talhões...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="shadow-xl card bg-base-100">
+        <div class="card-body">
+          <h2 class="mb-4 card-title">Informações</h2>
+          <div class="shadow-inner stats stats-vertical bg-base-200">
+            <div class="stat"><div class="stat-title">Talhão</div><div id="kpi-talhao" class="text-2xl stat-value text-primary">-</div></div>
+            <div class="stat"><div class="stat-title">Setor</div><div id="kpi-setor" class="text-2xl stat-value text-secondary">-</div></div>
+            <div class="stat"><div class="stat-title">Hectares</div><div id="kpi-hectares" class="text-2xl stat-value">-</div></div>
+            <div class="stat"><div class="stat-title">Última Atividade</div><div id="kpi-atividade" class="text-lg stat-value text-base-content/70">N/D</div></div>
+          </div>
+        </div>
       </div>
       
-      <div class="stat">
-          <div class="text-base stat-title">Setor</div>
-          <div id="kpi-setor" class="text-2xl stat-value text-secondary">-</div>
-      </div>
-      
-      <div class="stat">
-          <div class="text-base stat-title">Hectares</div>
-          <div id="kpi-hectares" class="text-2xl stat-value">-</div>
-      </div>
-  </div>
-</div>
-
-    <div class="flex-grow">
-        <div
-            id="map-container"
-            class="w-[1200px] h-[700px] border bg-base-100 rounded-lg overflow-hidden flex items-center justify-center shadow-lg"
-            role="region"
-            aria-label="Mapa interativo"
-        >
-            <div class="text-lg text-base-content/50">Selecione um talhão para ver o mapa.</div>
+      <div class="shadow-xl card bg-base-100">
+        <div class="card-body">
+          <h2 class="card-title">Controles do Mapa</h2>
+          <p class="text-sm text-base-content/60">Use os botões ou a roda do mouse para zoom.</p>
+          <div class="flex items-center gap-2 mt-4 join">
+              <button id="zoom-in-btn" class="flex-grow join-item btn btn-primary" aria-label="Aumentar zoom"><i data-lucide="zoom-in"></i></button>
+              <button id="zoom-out-btn" class="flex-grow join-item btn btn-primary" aria-label="Reduzir zoom"><i data-lucide="zoom-out"></i></button>
+              <button id="reset-btn" class="flex-grow join-item btn btn-ghost" aria-label="Resetar zoom e posição"><i data-lucide="rotate-cw"></i></button>
+          </div>
         </div>
-
-        <div class="flex justify-center gap-2 mt-4 md:justify-start">
-            <button id="zoom-in-btn" class="btn btn-primary btn-sm" aria-label="Aumentar zoom">Zoom +</button>
-            <button id="zoom-out-btn" class="btn btn-primary btn-sm" aria-label="Reduzir zoom">Zoom -</button>
-            <button id="reset-btn" class="btn btn-ghost btn-sm" aria-label="Resetar zoom e posição">Resetar</button>
-        </div>
+      </div>
     </div>
+  </aside>
+
+  <main class="flex-grow min-w-0">
+    <div class="h-full shadow-xl card bg-base-100">
+      <div class="card-body">
+        <h2 id="map-title" class="card-title">Mapa Interativo</h2>
+        <div id="map-container"
+             class="w-full h-[70vh] min-h-[500px] border border-base-300 bg-base-200 rounded-lg flex items-center justify-center shadow-inner"
+             role="region"
+             aria-label="Mapa interativo"
+        >
+          </div>
+      </div>
+    </div>
+  </main>
 
 </div>
 {% endblock content %}
 
 {% block scripts %}
-    {{ block.super }}
-    
-    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Objeto para organizar todo o estado e elementos da aplicação
+  const mapApp = {
+    // Elementos da UI
+    elements: {
+      talhaoSelector: document.getElementById('talhao-selector'),
+      mapContainer: document.getElementById('map-container'),
+      mapTitle: document.getElementById('map-title'),
+      kpiTalhao: document.getElementById('kpi-talhao'),
+      kpiSetor: document.getElementById('kpi-setor'),
+      kpiHectares: document.getElementById('kpi-hectares'),
+      zoomInBtn: document.getElementById('zoom-in-btn'),
+      zoomOutBtn: document.getElementById('zoom-out-btn'),
+      resetBtn: document.getElementById('reset-btn'),
+    },
+    // Instância do Panzoom
+    panzoomInstance: null,
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const talhaoSelector = document.getElementById('talhao-selector');
-            const mapContainer = document.getElementById('map-container');
-            const kpiTalhao = document.getElementById('kpi-talhao');
-            const kpiSetor = document.getElementById('kpi-setor');
-            const kpiHectares = document.getElementById('kpi-hectares');
-            
-            const zoomInBtn = document.getElementById('zoom-in-btn');
-            const zoomOutBtn = document.getElementById('zoom-out-btn');
-            const resetBtn = document.getElementById('reset-btn');
+    // Funções para atualizar a UI com base no estado
+    showEmptyState() {
+      this.elements.mapContainer.innerHTML = `
+        <div class="text-center text-base-content/50">
+          <i data-lucide="map-pin-off" class="w-16 h-16 mx-auto mb-4"></i>
+          <p class="font-semibold">Nenhum talhão selecionado</p>
+          <p class="text-sm">Por favor, selecione um talhão no painel ao lado.</p>
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+    },
+    showLoadingState() {
+      this.elements.mapContainer.innerHTML = '<span class="loading loading-spinner loading-lg"></span>';
+    },
+    showErrorState(message) {
+      this.elements.mapContainer.innerHTML = `
+        <div class="text-center text-error">
+          <i data-lucide="alert-triangle" class="w-16 h-16 mx-auto mb-4"></i>
+          <p class="font-semibold">Ocorreu um Erro</p>
+          <p class="text-sm">${message}</p>
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+    },
 
-            async function populateTalhaoSelector() {
-                try {
-                    // ✅ CORREÇÃO AQUI: Adicionar o prefixo /data/
-                    const response = await fetch('/data/api/lista-talhoes/');
-                    if (!response.ok) throw new Error('Falha ao carregar lista de talhões.');
-                    
-                    const talhoes = await response.json();
-                    
-                    talhaoSelector.innerHTML = '<option disabled selected>Selecione um talhão</option>';
-                    
-                    talhoes.forEach(talhao => {
-                        const option = document.createElement('option');
-                        option.value = talhao.CodTalhao;
-                        option.textContent = talhao.Talhao;
-                        talhaoSelector.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error(error);
-                    talhaoSelector.innerHTML = '<option disabled selected>Erro ao carregar</option>';
-                }
-            }
-
-            async function loadMapData(codigoTalhao) {
-                if (!codigoTalhao) return;
-                
-                mapContainer.innerHTML = `<div>Carregando...</div>`;
-                kpiTalhao.textContent = "-";
-                kpiSetor.textContent = "-";
-                kpiHectares.textContent = "-";
-
-                try {
-                    // ✅ CORREÇÃO AQUI: Adicionar o prefixo /data/
-                    const response = await fetch(`/data/api/mapa/${codigoTalhao}/`);
-                    if (!response.ok) throw new Error('Talhão não encontrado.');
-
-                    const data = await response.json();
-
-                    kpiTalhao.textContent = data.Talhao;
-                    kpiSetor.textContent = data.Setor;
-                    kpiHectares.textContent = data.HectaresTotais.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-                    const img = document.createElement('img');
-                    img.id = 'svg-map';
-                    img.className = 'max-w-none';
-                    img.alt = `Mapa para ${data.Talhao}`;
-                    
-                    img.onload = () => {
-                        mapContainer.innerHTML = '';
-                        mapContainer.appendChild(img);
-                        
-                        const pz = Panzoom(img, {
-                            maxScale: 10,
-                            minScale: 0.5,
-                            canvas: true 
-                        });
-
-                        mapContainer.addEventListener('wheel', pz.zoomWithWheel);
-                        zoomInBtn.addEventListener('click', pz.zoomIn);
-                        zoomOutBtn.addEventListener('click', pz.zoomOut);
-                        resetBtn.addEventListener('click', pz.reset);
-
-                        console.log("Panzoom inicializado com sucesso!");
-                    };
-                    
-                    img.onerror = () => {
-                        throw new Error('Falha ao carregar a imagem do mapa SVG.');
-                    };
-
-                    img.src = data.SVG;
-
-                } catch (error) {
-                    console.error('Erro ao carregar dados do mapa:', error);
-                    mapContainer.innerHTML = `<div class="p-4 text-error">${error.message}</div>`;
-                }
-            }
-
-            talhaoSelector.addEventListener('change', (event) => {
-                const selectedTalhaoCode = event.target.value;
-                loadMapData(selectedTalhaoCode);
-            });
-
-            populateTalhaoSelector();
+    // Lógica principal
+    async populateTalhaoSelector() {
+      try {
+        const response = await fetch('/data/api/lista-talhoes/');
+        if (!response.ok) throw new Error('Falha ao carregar lista de talhões.');
+        
+        const talhoes = await response.json();
+        
+        this.elements.talhaoSelector.innerHTML = '<option disabled selected value="">Selecione um talhão</option>';
+        talhoes.forEach(talhao => {
+          const option = new Option(talhao.Talhao, talhao.CodTalhao);
+          this.elements.talhaoSelector.appendChild(option);
         });
-    </script>
+      } catch (error) {
+        console.error(error);
+        this.elements.talhaoSelector.innerHTML = '<option disabled selected>Erro ao carregar</option>';
+      }
+    },
+
+    async loadMapData(codigoTalhao) {
+      if (!codigoTalhao) {
+        this.showEmptyState();
+        return;
+      }
+      
+      this.showLoadingState();
+      this.elements.mapTitle.textContent = "Carregando...";
+      ['kpiTalhao', 'kpiSetor', 'kpiHectares'].forEach(k => this.elements[k].textContent = "-");
+      
+      // Destrói a instância anterior do Panzoom para evitar memory leaks
+      if (this.panzoomInstance) {
+        this.panzoomInstance.destroy();
+        this.panzoomInstance = null;
+      }
+      this.elements.mapContainer.classList.remove('has-map');
+
+      try {
+        const response = await fetch(`/data/api/mapa/${codigoTalhao}/`);
+        if (!response.ok) throw new Error('Talhão não encontrado ou mapa indisponível.');
+
+        const data = await response.json();
+
+        // Atualiza KPIs
+        this.elements.kpiTalhao.textContent = data.Talhao;
+        this.elements.kpiSetor.textContent = data.Setor;
+        this.elements.kpiHectares.textContent = parseFloat(data.HectaresTotais).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        this.elements.mapTitle.textContent = `Visualizando: ${data.Talhao}`;
+
+        // Carrega e inicializa o mapa
+        const img = document.createElement('img');
+        img.id = 'svg-map';
+        img.className = 'max-w-none';
+        img.alt = `Mapa para ${data.Talhao}`;
+        
+        img.onload = () => {
+          this.elements.mapContainer.innerHTML = '';
+          this.elements.mapContainer.appendChild(img);
+          this.elements.mapContainer.classList.add('has-map');
+          
+          this.panzoomInstance = Panzoom(img, { maxScale: 10, minScale: 0.5, canvas: true });
+
+          // Reatribui eventos para a nova instância
+          this.elements.mapContainer.addEventListener('wheel', this.panzoomInstance.zoomWithWheel);
+          this.elements.zoomInBtn.onclick = () => this.panzoomInstance.zoomIn();
+          this.elements.zoomOutBtn.onclick = () => this.panzoomInstance.zoomOut();
+          this.elements.resetBtn.onclick = () => this.panzoomInstance.reset();
+        };
+        
+        img.onerror = () => this.showErrorState('Falha ao carregar a imagem do mapa SVG.');
+        img.src = data.SVG;
+
+      } catch (error) {
+        console.error('Erro ao carregar dados do mapa:', error);
+        this.showErrorState(error.message);
+        this.elements.mapTitle.textContent = "Mapa Interativo";
+      }
+    },
+    
+    // Função de inicialização
+    init() {
+      this.elements.talhaoSelector.addEventListener('change', (e) => this.loadMapData(e.target.value));
+      this.populateTalhaoSelector();
+      this.showEmptyState(); // Mostra o estado inicial
+    }
+  };
+
+  mapApp.init();
+});
+</script>
 {% endblock %}

@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: all;
+}
+
+@source "../../../**/*.{html,py,js}";
+@layer components {
+  .animated-tilt {
+    @apply transition-all duration-300 ease-in-out transform-gpu hover:-rotate-x-6 hover:rotate-y-6 hover:shadow-2xl;
+  }
+}
+
+

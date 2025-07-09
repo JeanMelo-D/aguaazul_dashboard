@@ -1,7 +1,11 @@
 # views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib import messages
 from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from .pipeline import (
     aguaazul_pipeline_colheita,
@@ -164,10 +168,54 @@ class ListaTalhoesAPIView(View):
             print(f"Erro ao listar talhões: {e}")
             return JsonResponse({'error': 'Erro ao carregar lista de talhões.'}, status=500)
 
+def login(request):
+    if request.method == 'POST':
+        # --- DEBUGGING PRINTS ---
+        print("Recebido um request POST.")
+        print("Dados do formulário:", request.POST)
+        # --- FIM DEBUGGING ---
+        
+        username_form = request.POST.get('username')
+        password_form = request.POST.get('password')
+
+        # --- DEBUGGING PRINTS ---
+        print(f"Usuário extraído do form: '{username_form}'")
+        print(f"Senha extraída do form: {'Sim' if password_form else 'Não'}")
+        # --- FIM DEBUGGING ---
+
+        user = authenticate(request, username=username_form, password=password_form)
+
+        # --- DEBUGGING PRINTS ---
+        print(f"Resultado da função authenticate: {user}")
+        # --- FIM DEBUGGING ---
+
+        if user is not None:
+            auth_login(request, user)
+            print("Login BEM-SUCEDIDO. Redirecionando...")
+            return redirect('home')
+        else:
+            print("Autenticação FALHOU. Adicionando mensagem de erro.")
+            messages.error(request, 'Usuário ou senha inválidos.')
+            return render(request, 'login/aguaazul.html') # Mude para o seu template
+            
+    return render(request, 'login/aguaazul.html') # Mude para o seu template
+
+
+def logout(request):
+    auth_logout(request)
+    return redirect('login')
+
+
 
 # As views que renderizam HTML permanecem as mesmas
+@login_required
 def home(request):
     return render(request, 'index.html')
 
+@login_required
 def maps(request):
     return render(request, 'maps.html')
+
+@login_required
+def chart(request):
+    return render(request, 'partials/chart.html')

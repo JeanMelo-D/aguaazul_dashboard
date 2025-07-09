@@ -1,312 +1,158 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Visão Geral -
-Colheita{% endblock %} {% block content %}
+{% extends 'base.html' %} {% load static %} 
 
-<div class="tabs tabs-lift">
-  <input
-    type="radio"
-    name="my_tabs"
-    role="tab"
-    class="tab whitespace-nowrap"
-    aria-label="Dashboard Colheita 🌾"
-    checked
-  />
-  <div
-    role="tabpanel"
-    class="p-6 tab-content bg-base-100 border-base-300 rounded-box whitespace-nowrap"
-  >
-    <div class="mb-6">
-      <h1 class="text-7xl font-extralight text-primary">Safras - Colheita</h1>
-      <p class="text-base-content/70" id="current-date"></p>
-    </div>
-    <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="shadow-2xl stat">
-          <div class="stat-title">Total Sacas Líquidas</div>
-          <div
-            class="text-primary font-extralight stat-value"
-            id="kpi-total-sacas-liquidas"
-          >
-            0
-          </div>
-          <div class="stat-desc">Líquido (60kg)</div>
+{% block title %}Visão Geral - Colheita{% endblock %} 
+
+{% block content %}
+<div class="min-h-screen p-4 bg-gradient-to-r from-base-100 to-base-300 sm:p-6 lg:p-8">
+  <div class="tabs tabs-lifted tabs-lg">
+    <input
+      type="radio"
+      name="my_tabs"
+      role="tab"
+      class="tab whitespace-nowrap checked:bg-primary"
+      aria-label="Colheita"
+      checked
+    />
+    
+    <div role="tabpanel" class="p-6 tab-content bg-base-100 border-base-300 rounded-box" >
+      <div class="flex flex-col gap-8">
+        <div class="pb-4 border-b border-base-content/10">
+          <h1 class="text-5xl font-extralight text-primary">Safras - Colheita</h1>
+          <p class="mt-1 text-base-content/70" id="current-date"></p>
         </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title">Total Sacas Brutas</div>
-          <div
-            class="text-primary stat-value font-extralight"
-            id="kpi-total-sacas-brutas"
-          >
-            0
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-primary hover:scale-105">
+            <div class="stat">
+              <div class="stat-title">Total Sacas Líquidas</div>
+              <div class="text-lg font-bold stat-value md:text-2xl text-primary" id="kpi-total-sacas-liquidas">0</div>
+              <div class="stat-desc">Líquido (60kg)</div>
+            </div>
           </div>
-          <div class="stat-desc">Bruto (60kg)</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title">Hectares Colhidos</div>
-          <div class="stat-value font-extralight" id="kpi-total-hectares">
-            0.00
+          <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-secondary hover:scale-105">
+            <div class="stat">
+              <div class="stat-title">Total Sacas Brutas</div>
+              <div class="text-lg font-bold stat-value md:text-2xl text-secondary" id="kpi-total-sacas-brutas">0</div>
+              <div class="stat-desc">Bruto (60kg)</div>
+            </div>
           </div>
-          <div class="stat-desc">Hectares</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title">Média Líquida</div>
-          <div
-            class="text-warning stat-value font-extralight"
-            id="kpi-media-liquida"
-          >
-            0.00
+          <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-accent hover:scale-105">
+            <div class="stat">
+              <div class="stat-title">Hectares Colhidos</div>
+              <div class="text-lg font-bold stat-value md:text-2xl" id="kpi-total-hectares">0,00</div>
+              <div class="stat-desc">Hectares</div>
+            </div>
           </div>
-          <div class="stat-desc">Sc / Ha</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title">Média Bruta</div>
-          <div
-            class="text-warning stat-value font-extralight"
-            id="kpi-media-bruta"
-          >
-            0.00
+          <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-warning hover:scale-105">
+            <div class="stat">
+              <div class="stat-title">Média Líquida</div>
+              <div class="text-lg font-bold stat-value md:text-2xl text-warning" id="kpi-media-liquida">0,00</div>
+              <div class="stat-desc">Sc / Ha</div>
+            </div>
           </div>
-          <div class="stat-desc">Sc / Ha</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title">Nº de Talhões</div>
-          <div class="stat-value font-extralight" id="kpi-num-talhoes">0</div>
-          <div class="stat-desc">Na seleção atual</div>
-        </div>
-      </div>
-    </div>
-    <div class="p-4 mb-6 shadow-2xl card bg-base-300 md:p-6">
-      <div class="p-2 card-body md:p-8">
-        <h2 class="mb-4 card-title">Filtrar Dados</h2>
-        <div
-          class="grid items-end grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"
-        >
-          <div class="w-full form-control">
-            <label class="label" for="safraSelect"
-              ><span class="label-text">Safra</span></label
-            >
-            <select id="safraSelect" class="select select-bordered">
-              <option value="">Todas as Safras</option>
-            </select>
+          <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-warning hover:scale-105">
+            <div class="stat">
+              <div class="stat-title">Média Bruta</div>
+              <div class="text-lg font-bold stat-value md:text-2xl text-warning" id="kpi-media-bruta">0,00</div>
+              <div class="stat-desc">Sc / Ha</div>
+            </div>
           </div>
-          <div class="w-full form-control">
-            <label class="label" for="culturaSelect"
-              ><span class="label-text">Cultura</span></label
-            >
-            <select id="culturaSelect" class="select select-bordered">
-              <option value="">Todas as Culturas</option>
-            </select>
-          </div>
-          <div class="w-full form-control">
-            <label class="label" for="talhaoSelect"
-              ><span class="label-text">Talhão</span></label
-            >
-            <select id="talhaoSelect" class="select select-bordered">
-              <option value="">Todos os Talhões</option>
-            </select>
-          </div>
-          <div class="w-full form-control">
-            <button id="applyFiltersBtn" class="btn btn-primary">
-              Aplicar Filtros
-            </button>
+          <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-info hover:scale-105">
+            <div class="stat">
+              <div class="stat-title">Nº de Talhões</div>
+              <div class="text-lg font-bold stat-value md:text-2xl" id="kpi-num-talhoes">0</div>
+              <div class="stat-desc">Na seleção atual</div>
+            </div>
           </div>
         </div>
-        <div
-          id="loading"
-          class="flex items-center gap-2 mt-4"
-          style="display: none"
-        >
-          <span class="loading loading-spinner loading-sm"></span
-          ><span>Carregando...</span>
+
+        <div class="flex flex-col gap-8">
+          <div class="shadow-xl card bg-base-100">
+            <div class="card-body">
+              <h2 class="card-title">Filtrar Dados</h2>
+              <div class="grid items-end grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <div class="w-full form-control"><label class="label"><span class="label-text">Safra</span></label><select id="safraSelect" class="select select-bordered"><option value="">Todas as Safras</option></select></div>
+                <div class="w-full form-control"><label class="label"><span class="label-text">Cultura</span></label><select id="culturaSelect" class="select select-bordered"><option value="">Todas as Culturas</option></select></div>
+                <div class="w-full form-control"><label class="label"><span class="label-text">Talhão</span></label><select id="talhaoSelect" class="select select-bordered"><option value="">Todos os Talhões</option></select></div>
+                <div class="w-full form-control"><button id="applyFiltersBtn" class="btn btn-primary">Aplicar Filtros</button></div>
+              </div>
+              <div id="loading" class="flex items-center gap-2 mt-4" style="display: none"><span class="loading loading-spinner loading-sm"></span><span>Carregando...</span></div>
+            </div>
+          </div>
+
+          <div class="shadow-xl card bg-base-100">
+            <div class="card-body">
+              <div class="overflow-x-auto">
+                <table class="table w-full text-sm table-sm table-hover" id="resultsTable">
+                  <thead><tr></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="w-full mx-auto">
-      <div class="rounded-lg shadow-2xl radio-primary card bg-base-300">
-        <div class="card-body">
-          <div class="overflow-x-auto">
-            <table
-              class="table w-full text-sm table-sm table-hover sortable"
-              id="resultsTable"
-            >
-              <thead class="rounded-lg">
-                <tr></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
+    
+
+    <input
+      type="radio"
+      name="my_tabs"
+      role="tab"
+      class="tab whitespace-nowrap checked:bg-secondary"
+      aria-label="Análise de Contratos"
+    />
+    <div
+      role="tabpanel"
+      class="p-6 tab-content bg-base-100 border-base-300 rounded-box"
+    >
+      <div class="flex flex-col gap-8">
+        <div class="pb-4 border-b border-base-content/10">
+            <h1 class="text-5xl font-extralight text-secondary">Contratos - Vendas</h1>
+            <p class="mt-1 text-base-content/70" id="current-date-contratos"></p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-success hover:scale-105"><div class="stat"><div class="stat-title">Total Fixado</div><div class="text-lg font-bold stat-value md:text-2xl text-success" id="kpi-contrato-fixado">0,00</div><div class="stat-desc">Sacas (60kg)</div></div></div>
+            <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-info hover:scale-105"><div class="stat"><div class="stat-title">Total Entregue</div><div class="text-lg font-bold stat-value md:text-2xl" id="kpi-contrato-entregue">0,00</div><div class="stat-desc">Sacas (60kg)</div></div></div>
+            <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-error hover:scale-105"><div class="stat"><div class="stat-title">Saldo a Entregar</div><div class="text-lg font-bold stat-value md:text-2xl text-error" id="kpi-contrato-saldo">0,00</div><div class="stat-desc">Sacas (60kg)</div></div></div>
+            <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-primary hover:scale-105"><div class="stat"><div class="stat-title">Faturamento Total</div><div class="text-lg font-bold stat-value md:text-2xl" id="kpi-contrato-faturamento">0,00</div><div class="stat-desc">R$</div></div></div>
+            <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-accent hover:scale-105"><div class="stat"><div class="stat-title">Preço Médio</div><div class="text-lg font-bold stat-value md:text-2xl text-accent" id="kpi-contrato-preco-medio">0,00</div><div class="stat-desc">R$ / Saca</div></div></div>
+            <div class="w-full transition-transform border-l-4 shadow-xl stats bg-base-100 border-secondary hover:scale-105"><div class="stat"><div class="stat-title">Nº de Contratos</div><div class="text-lg font-bold stat-value md:text-2xl" id="kpi-contrato-quantidade">0</div><div class="stat-desc">Na seleção atual</div></div></div>
+        </div>
+
+        <div class="flex flex-col gap-8">
+            <div class="shadow-xl card bg-base-100">
+                <div class="card-body">
+                    <h2 class="card-title">Filtrar Contratos</h2>
+                    <div class="grid items-end grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        <div class="w-full form-control"><label class="label"><span class="label-text">Safra</span></label><select id="contratoSafraSelect" class="select select-bordered"><option value="">Todas as Safras</option></select></div>
+                        <div class="w-full form-control"><label class="label"><span class="label-text">Commoditie</span></label><select id="contratoCommoditieSelect" class="select select-bordered"><option value="">Todas as Commodities</option></select></div>
+                        <div class="w-full form-control"><label class="label"><span class="label-text">Cliente</span></label><select id="contratoClienteSelect" class="select select-bordered"><option value="">Todos os Clientes</option></select></div>
+                        <div class="w-full form-control"><button id="applyContratosFiltersBtn" class="btn btn-primary">Aplicar Filtros</button></div>
+                    </div>
+                    <div id="loadingContratos" class="flex items-center gap-2 mt-4" style="display: none"><span class="loading loading-spinner loading-sm"></span><span>Carregando...</span></div>
+                </div>
+            </div>
+
+            <div class="shadow-xl card bg-base-100">
+                <div class="card-body">
+                    <div class="overflow-x-auto">
+                        <table class="table w-full text-sm table-sm table-hover" id="contratosTabela">
+                            <thead><tr></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
       </div>
     </div>
   </div>
-  {% comment %} Segunda tabela - contratos {% endcomment %}
-  <input
-    type="radio"
-    name="my_tabs"
-    role="tab"
-    class="tab whitespace-nowrap"
-    aria-label="Análise de Contratos"
-  />
-  <div
-    role="tabpanel"
-    class="p-6 tab-content bg-base-100 border-base-300 rounded-box min-h-[400px]"
-  >
-    <div class="mb-6">
-      <h1 class="text-7xl font-extralight text-secondary-content">
-        Contratos - Vendas
-      </h1>
-      <p class="text-base-content/70" id="current-date-contratos"></p>
-    </div>
+</div>
+{% endblock %}
 
-    <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title text-info-content">Total Fixado</div>
-          <div
-            class="text-secondary font-extralight stat-value"
-            id="kpi-contrato-fixado"
-          >
-            0,00
-          </div>
-          <div class="stat-desc">Sacas (60kg)</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title text-info-content">Total Entregue</div>
-          <div
-            class="text-secondary-content font-extralight stat-value"
-            id="kpi-contrato-entregue"
-          >
-            0,00
-          </div>
-          <div class="stat-desc">Sacas (60kg)</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title text-info-content">Saldo a Entregar</div>
-          <div
-            class="text-secondary font-extralight stat-value"
-            id="kpi-contrato-saldo"
-          >
-            0,00
-          </div>
-          <div class="stat-desc">Sacas (60kg)</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title text-info-content">Faturamento Total</div>
-          <div
-            class="text-secondary-content font-extralight stat-value"
-            id="kpi-contrato-faturamento"
-          >
-            0,00
-          </div>
-          <div class="stat-desc">R$</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title text-info-content">Preço Médio</div>
-          <div
-            class="text-success font-extralight stat-value"
-            id="kpi-contrato-preco-medio"
-          >
-            0,00
-          </div>
-          <div class="stat-desc">R$ / Saca</div>
-        </div>
-      </div>
-      <div class="shadow-lg shadow-primary stats bg-primary-content">
-        <div class="stat">
-          <div class="stat-title text-info-content">Nº de Contratos</div>
-          <div
-            class="text-secondary-content stat-value font-extralight"
-            id="kpi-contrato-quantidade"
-          >
-            0
-          </div>
-          <div class="stat-desc">Na seleção atual</div>
-        </div>
-      </div>
-    </div>
-    <div class="p-4 mb-6 shadow-2xl card bg-base-300 md:p-6">
-      <div class="p-2 card-body md:p-8">
-        <h2 class="mb-4 card-title">Filtrar Contratos</h2>
-        <div class="grid items-end grid-cols-1 gap-4 md:grid-cols-4">
-          <div class="w-full form-control">
-            <label class="label" for="contratoSafraSelect"
-              ><span class="label-text">Safra</span></label
-            >
-            <select id="contratoSafraSelect" class="select select-bordered">
-              <option value="">Todas as Safras</option>
-            </select>
-          </div>
-          <div class="w-full form-control">
-            <label class="label" for="contratoCommoditieSelect"
-              ><span class="label-text">Commoditie</span></label
-            >
-            <select
-              id="contratoCommoditieSelect"
-              class="select select-bordered"
-            >
-              <option value="">Todas as Commodities</option>
-            </select>
-          </div>
-          <div class="w-full form-control">
-            <label class="label" for="contratoClienteSelect"
-              ><span class="label-text">Cliente</span></label
-            >
-            <select id="contratoClienteSelect" class="select select-bordered">
-              <option value="">Todos os Clientes</option>
-            </select>
-          </div>
-          <div class="w-full form-control">
-            <button id="applyContratosFiltersBtn" class="btn btn-primary">
-              Aplicar Filtros
-            </button>
-          </div>
-        </div>
-        <div
-          id="loadingContratos"
-          class="flex items-center gap-2 mt-4"
-          style="display: none"
-        >
-          <span class="loading loading-spinner loading-sm"></span
-          ><span>Carregando...</span>
-        </div>
-      </div>
-    </div>
-    <div class="w-full mx-auto">
-      <div class="rounded-lg shadow-2xl card bg-base-300">
-        <div class="card-body">
-          <div class="overflow-x-auto">
-            <table
-              class="table w-full text-sm table-sm table-hover sortable"
-              id="contratosTabela"
-            >
-              <thead class="rounded-lg">
-                <tr></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endblock %} {% block scripts %}
+{% block scripts %}
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // --- 1. FUNÇÕES GLOBAIS E FORMATADORES ---
@@ -388,7 +234,14 @@ Colheita{% endblock %} {% block content %}
         const headers = Object.keys(data[0]);
         headers.forEach((header) => {
           const th = document.createElement("th");
-          th.classList.add('bg-primary', 'text-primary-content','rounded');
+          th.classList.add(
+            "bg-base-100",
+            "border-b-2",
+            "font-light",
+            "text-pretty",
+            "shadow",
+            "textarea-sucess"
+          );
           th.textContent = header
             .replace(/_/g, " ")
             .replace(/\b\w/g, (l) => l.toUpperCase());
@@ -397,10 +250,14 @@ Colheita{% endblock %} {% block content %}
 
         data.forEach((row) => {
           const tr = document.createElement("tr");
-            tr.classList.add('whitespace-nowrap', 'hover:bg-primary', 'hover:text-primary-content');
+          tr.classList.add(
+            "whitespace-nowrap",
+            "hover:bg-primary",
+            "hover:text-primary-content"
+          );
           headers.forEach((header) => {
             const td = document.createElement("td");
-            td.classList.add('whitespace-nowrap');
+            td.classList.add("whitespace-nowrap");
 
             const value = row[header];
 
@@ -665,8 +522,8 @@ Colheita{% endblock %} {% block content %}
 
       // Adiciona um listener para a aba de contratos
       const contratoTab = document.querySelector(
-        'input[aria-label="Análise de Contratos 📄"]'
-      );
+        'input[aria-label="Análise de Contratos"]'
+      ); // Corrigido para corresponder ao aria-label
       if (contratoTab) {
         contratoTab.addEventListener("click", () => {
           // Carrega os dados da aba de contratos apenas na primeira vez que ela for clicada.

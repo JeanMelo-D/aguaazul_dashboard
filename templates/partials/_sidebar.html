@@ -1,41 +1,67 @@
-{% load static %}
-<aside class="sticky top-0 flex-shrink-0 hidden w-64 h-screen shadow-lg bg-base-100 lg:block">
-    <div class="flex items-center justify-center p-4 border-b border-base-300">
-      <h1 class="text-2xl font-bold text-primary">Dashboard</h1>
-    </div>
+{% load static tailwind_tags %}
+
+<aside class="sticky top-0 flex-shrink-0 hidden h-screen bg-transparent shadow-lg w-60 lg:block">
+  
+  <div class="flex items-center gap-3 p-4 border-b h-18 border-y-transparent">
+    <i data-lucide="layout-dashboard" class="text-primary"></i>
+    <h1 class="text-2xl font-bold text-primary">Dashboard</h1>
+  </div>
+  
+  <ul class="p-4 menu text-base-content">
+    <li class="menu-title"><span>Principal</span></li>
     
-    <ul class="w-full p-4 menu text-base-content">
-      <li class="menu-title"><span>Principal</span></li>
-      <li>
-        <a class="active" href="/data">
-          <i data-lucide="layout-dashboard"></i>
-          Safras
-        </a>
-      </li>
-      <li>
-        <a>
-          <i data-lucide="bar-chart-3"></i>
-          Analytics
-        </a>
-      </li>
-      <li>
-          <a href="maps">
-          <i data-lucide="file-text"></i>
-          Mapas
-        </a>
-      </li>
-      <li class="menu-title"><span>Relatórios</span></li>
-      <li>
-        <a>
-          <i data-lucide="users"></i>
-          Funcionarios
-        </a>
-      </li>
-      <li>
-        <a>
-          <i data-lucide="shopping-cart"></i>
-          Fornecedores
-        </a>
-      </li>
-    </ul>
-  </aside>
+    <li>
+      <details open>
+        <summary class="flex items-center justify-between">
+          <span class="flex items-center gap-3">
+            <i data-lucide="leaf" class="text-success"></i>
+            <span>Agrícola</span>
+          </span>
+          <i data-lucide="chevron-down" class="transition-transform duration-300 details-open:-rotate-180"></i>
+        </summary>
+        
+        <ul>
+          <li>
+            <a href="{% url 'home' %}" class="flex items-center gap-3 transition-colors duration-200 {% if request.resolver_match.url_name == 'colheita' %}active{% endif %}">
+              <i data-lucide="vegan" class="w-4 h-4"></i>
+              <span>Colheita</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'maps' %}" class="flex items-center gap-3 transition-colors duration-500 {% if request.resolver_match.url_name == 'maps' %}active{% endif %}">
+              <i data-lucide="map" class="w-4 h-4"></i>
+              <span>Mapas</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 transition-colors duration-200 {% if request.resolver_match.url_name == 'maquinas' %}active{% endif %}">
+              <i data-lucide="tractor" class="w-4 h-4"></i>
+              <span>Máquinas</span>
+            </a>
+          </li>
+        </ul>
+      </details>
+    </li>
+    
+    <li>
+      <a class="flex items-center gap-3 transition-colors duration-200 {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}">
+        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+        <span>Analytics</span>
+      </a>
+    </li>
+
+    <li class="menu-title"><span>Relatórios</span></li>
+    <li>
+      <a class="flex items-center gap-3 transition-colors duration-200">
+        <i data-lucide="users" class="w-4 h-4"></i>
+        <span>Funcionários</span>
+      </a>
+    </li>
+    <li>
+      <a class="flex items-center gap-3 transition-colors duration-200">
+        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+        <span>Fornecedores</span>
+      </a>
+    </li>
+  </ul>
+</aside>
