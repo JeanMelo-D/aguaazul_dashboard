@@ -1,4 +1,4 @@
-
+from django.urls import path
 import polars as pl
 from decouple import config
 from adlfs import AzureBlobFileSystem
@@ -17,8 +17,6 @@ class Auth:
             df = pl.read_parquet(f)
         return df
 
-
-# Instância do leitor
 reader = Auth()
 
 def azul_travas() -> pl.DataFrame:return reader.reading(config("AZL_DASH_COLHEITA")+"/Extracao_saldo_contratos.parquet")
@@ -26,6 +24,12 @@ def azul_colhido() -> pl.DataFrame:return reader.reading(config("AZL_DASH_COLHEI
 def azul_hectares() -> pl.DataFrame:return reader.reading(config("AZL_DASH_COLHEITA")+"/Extracao_Hectares_Cultura.parquet")
 def azul_romaneios() -> pl.DataFrame:return reader.reading(config("AZL_DASH_COLHEITA")+"/Extracao_Romaneio_Entrada.parquet")
 def azul_talhao() -> pl.DataFrame:return reader.reading(config("AZL_DASH_COLHEITA")+"/Extracao_Cad_Talhao.parquet")
+
+
+
+def azul_doc_a_pagar() -> pl.DataFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_contas_a_pagar.parquet")
+def azul_contas_bancarias() -> pl.DataFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_contas_bancarias.parquet")
+def azul_doc_pagos() -> pl.DataFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_documentos_pagos.parquet")
 
 
 

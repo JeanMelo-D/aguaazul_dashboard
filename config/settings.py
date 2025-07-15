@@ -16,11 +16,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Carrega a chave secreta a partir das variáveis de ambiente. NUNCA deixe a chave no código.
 SECRET_KEY = config('SECRET_KEY')
 
-# DEBUG deve ser False em produção para não expor informações sensíveis.
+
+ ## Em prod descomentar essa opção
+ ## precisa apagar a pasta staticfiles em developmente
+ 
+# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd" ## COMENTAR PARA PRODUÇÃO 
+ 
+STATIC_ROOT = BASE_DIR / 'staticfiles'           
+
 # O config('DEBUG', default=False, cast=bool) permite ligá-lo em desenvolvimento com um .env
 
-DEBUG = config('DEBUG', default=False, cast=bool)
-# DEBUG = config('DEBUG', default=False, cast=bool)
+# DEBUG = True  --em dev comentar o abaixo
+DEBUG = config('DEBUG', default=False, cast=bool)          
 
 # Adiciona os domínios que podem acessar sua aplicação.
 ALLOWED_HOSTS = [
@@ -139,7 +146,6 @@ STATICFILES_DIRS = [
 # # Pasta de destino para onde o `collectstatic` irá copiar todos os arquivos.
 # STATIC_ROOT = BASE_DIR / 'staticfiles'  ## DESCOMENTAR SOMENTE EM PRODUÇÃO
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Mecanismo de armazenamento para o WhiteNoise, que comprime e versiona os arquivos.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -159,14 +165,14 @@ CORS_ALLOWED_ORIGINS = [
 # CONFIGURAÇÕES GERAIS
 # ==============================================================================
 
-# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd" ## COMENTAR PARA PRODUÇÃO
+
 
 # config/settings.py
 
 LOGIN_REDIRECT_URL = 'home'
+
 LOGIN_URL = 'login'
 
 CSRF_TRUSTED_ORIGINS = ['https://fazaguaazul.com'] 
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

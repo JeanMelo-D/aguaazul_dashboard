@@ -7,6 +7,9 @@ from django.views import View
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
+
+
+
 from .pipeline import (
     aguaazul_pipeline_colheita,
     aguaazul_cleanup,

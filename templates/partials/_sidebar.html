@@ -42,12 +42,34 @@
         </ul>
       </details>
     </li>
-    
+  <li>
+
+
+    <!-- FINANCEIRO -->
     <li>
-      <a class="flex items-center gap-3 transition-colors duration-200 {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}">
-        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-        <span>Analytics</span>
-      </a>
+      <details open>
+        <summary class="flex items-center justify-between">
+          <span class="flex items-center gap-3">
+            <i data-lucide="dollar-sign" class="text-warning"></i>
+            <span>Financeiro</span>
+          </span>
+          <i data-lucide="chevron-down" class="transition-transform duration-300 details-open:-rotate-180"></i>
+        </summary>
+        <ul>
+          <li>
+            <a href="{% url 'fluxo_caixa:dashboard' %}" class="flex items-center gap-3 transition-colors duration-200 {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+              <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+              <span>Analytics</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 transition-colors duration-200 {% if request.resolver_match.url_name == 'maquinas' %}active{% endif %}">
+              <i data-lucide="handshake" class="w-4 h-4"></i>
+              <span>PN</span>
+            </a>
+          </li>
+        </ul>
+      </details>
     </li>
 
     <li class="menu-title"><span>Relatórios</span></li>

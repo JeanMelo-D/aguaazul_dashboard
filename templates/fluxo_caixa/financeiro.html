@@ -1,0 +1,517 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Dashboard Financeiro - Água Azul{% endblock %} 
+{% block content %}
+
+<div role="tablist" class="tabs tabs-lifted">
+  <input
+    type="radio"
+    name="dashboard_tabs"
+    role="tab"
+    class="tab"
+    aria-label="Visão Geral"
+    checked
+  />
+  <div
+    role="tabpanel"
+    class="p-6 tab-content bg-base-100 border-base-300 rounded-box"
+  >
+    <div class="space-y-8">
+      <div>
+        <h2 class="mb-4 text-2xl font-bold text-base-content">
+          Próximos Vencimentos
+        </h2>
+        <div class="grid grid-cols-2 gap-5 mb-8 md:grid-cols-3 lg:grid-cols-6">
+          <div
+            class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-primary"
+          >
+            <h4
+              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              id="kpi-next-one-title"
+            >
+              Carregando...
+            </h4>
+            <p
+              class="flex items-start justify-center text-3xl font-bold text-base-content"
+            >
+              <span class="mr-1 text-base font-medium">R$</span
+              ><span id="kpi-next-one-value">0,00</span>
+            </p>
+          </div>
+          <div
+            class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-secondary"
+          >
+            <h4
+              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              id="kpi-next-two-title"
+            >
+              Carregando...
+            </h4>
+            <p
+              class="flex items-start justify-center text-3xl font-bold text-base-content"
+            >
+              <span class="mr-1 text-base font-medium">R$</span
+              ><span id="kpi-next-two-value">0,00</span>
+            </p>
+          </div>
+          <div
+            class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-accent"
+          >
+            <h4
+              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              id="kpi-next-three-title"
+            >
+              Carregando...
+            </h4>
+            <p
+              class="flex items-start justify-center text-3xl font-bold text-base-content"
+            >
+              <span class="mr-1 text-base font-medium">R$</span
+              ><span id="kpi-next-three-value">0,00</span>
+            </p>
+          </div>
+          <div
+            class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-success"
+          >
+            <h4
+              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              id="kpi-next-four-title"
+            >
+              Carregando...
+            </h4>
+            <p
+              class="flex items-start justify-center text-3xl font-bold text-base-content"
+            >
+              <span class="mr-1 text-base font-medium">R$</span
+              ><span id="kpi-next-four-value">0,00</span>
+            </p>
+          </div>
+          <div
+            class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-warning"
+          >
+            <h4
+              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              id="kpi-next-five-title"
+            >
+              Carregando...
+            </h4>
+            <p
+              class="flex items-start justify-center text-3xl font-bold text-base-content"
+            >
+              <span class="mr-1 text-base font-medium">R$</span
+              ><span id="kpi-next-five-value">0,00</span>
+            </p>
+          </div>
+          <div
+            class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-error"
+          >
+            <h4
+              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              id="kpi-next-six-title"
+            >
+              Carregando...
+            </h4>
+            <p
+              class="flex items-start justify-center text-3xl font-bold text-base-content"
+            >
+              <span class="mr-1 text-base font-medium">R$</span
+              ><span id="kpi-next-six-value">0,00</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 shadow-lg bg-base-100 rounded-xl">
+        <h2 class="mb-6 text-xl font-bold text-base-content">
+          Fluxo de Caixa: Entradas vs. Saídas
+        </h2>
+        <div class="flex flex-wrap items-center gap-4 mb-5">
+          <label for="startDate" class="font-medium">De:</label>
+          <input
+            type="date"
+            id="startDate"
+            class="w-full max-w-xs input input-bordered input-sm"
+          />
+          <label for="endDate" class="font-medium">Até:</label>
+          <input
+            type="date"
+            id="endDate"
+            class="w-full max-w-xs input input-bordered input-sm"
+          />
+          <label for="granularity" class="font-medium">Agrupar por:</label>
+          <select
+            id="granularity"
+            class="w-full max-w-xs select select-bordered select-sm"
+          >
+            <option value="month" selected>Mês</option>
+            <option value="week">Semana</option>
+            <option value="day">Dia</option>
+            <option value="year">Ano</option>
+          </select>
+          <button id="filterButton" class="btn btn-primary btn-sm">
+            Filtrar
+          </button>
+        </div>
+        <div id="financeiroChart"></div>
+      </div>
+    </div>
+  </div>
+  {% comment %} Aqui começa a Tab 2  {% endcomment %}
+  <input
+    type="radio"
+    name="dashboard_tabs"
+    role="tab"
+    class="tab"
+    aria-label="Fluxo de Caixa"
+  />
+  <div
+    role="tabpanel"
+    class="p-6 tab-content bg-base-100 border-base-300 rounded-box"
+  >
+    <div class="overflow-x-auto">
+      <div class="container p-4 mx-auto md:p-8">
+        <div class="flex flex-wrap items-center mb-5 p-6gap-4">
+
+
+        <h1 class="mb-6 text-4xl font-bold">{{ page_title }}</h1>
+
+        <div class="w-full mb-8 shadow hover:border-white stats stats-vertical lg:stats-horizontal ">
+          <div class="stat bg-base-300">
+            <div class="card-title text-2xl font-bold
+            text-neutral-content
+            bg-gradient-to-r from-primary to-accent
+            bg-[length:0%_10px] bg-no-repeat bg-left-bottom
+            hover:bg-[length:100%_2px] transition-all duration-500">
+                Receitas
+            </div>
+            <div class='stat-title'> (Realizadas + Previstas) </div>
+            <div class="stat-value text-accent" id="kpi-receitas">
+              Carregando...
+            </div>
+            <div class="stat-desc">Total de entradas no período</div>
+          </div>
+
+          <div class="stat bg-base-300">
+            <div class="card-title text-2xl font-bold
+            text-neutral-content
+            bg-gradient-to-r from-primary to-accent
+            bg-[length:0%_10px] bg-no-repeat bg-left-bottom
+            hover:bg-[length:100%_2px] transition-all duration-500">
+                Despesas
+            </div>
+            <div class='stat-title'> (Pagas + A Pagar) </div>
+            <div class="stat-value text-error" id="kpi-despesas">
+              Carregando...
+            </div>
+            <div class="stat-desc">Total de saídas no período</div>
+          </div>
+          <div class="stat bg-base-300">
+            <div class="card-title text-2xl font-bold
+            text-neutral-content
+            bg-gradient-to-r from-warning to-accent
+            bg-[length:0%_10px] bg-no-repeat bg-left-bottom
+            hover:bg-[length:100%_2px] transition-all duration-500">
+                Saldo
+            </div>
+            <div class='stat-title'> (receitas - Despesas) </div>
+            <div class="stat-value" id="kpi-saldo">Carregando...</div>
+            <div class="stat-desc">Saldo acumulado na última data</div>
+          </div>
+        </div>
+
+        <label for="startDate2" class="p-2 font-medium">De:</label>
+        <input
+          type="date"
+          id="startDate2"
+          class="w-full max-w-xs input input-bordered input-sm"
+        />
+
+        <label for="endDate2" class="p-2 font-medium">Até:</label>
+        <input
+          type="date"
+          id="endDate2"
+          class="w-full max-w-xs input input-bordered input-sm"
+        />
+        <label for="granularity2" class="p-2 font-medium">Agrupar por:</label>
+        <select
+          id="granularity2"
+          class="w-full max-w-xs select select-bordered select-sm"
+        >
+          <option value="day">Dia</option>
+          <option value="week">Semana</option>
+          <option value="month"selected >Mês</option>
+          <option value="year">Ano</option>
+        </select>
+
+        <button id="filterButton2" class="btn btn-error btn-sm">
+          Filtrar
+        </button>
+      </div>
+
+        <div class="overflow-x-auto">
+          <table class="table w-full hover bg-base-300">
+            <thead class="text-base">
+              <tr >
+                <th class='bg-base-content text-base-300'>Data</th>
+                <th class="text-right bg-base-content text-base-300">Recebidos</th>
+                <th class="text-right bg-base-content text-base-300">A Receber</th>
+                <th class="text-right bg-base-content text-base-300">Pagamentos</th>
+                <th class="text-right bg-base-content text-base-300">A Pagar</th>
+                <th class="text-right bg-base-content text-base-300">Mov. do Dia</th>
+                <th class="font-bold text-right bg-base-content text-base-300">Saldo Acumulado</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-corpo-fluxo"></tbody>
+          </table>
+        </div>
+      </div>
+
+      {% endblock %} {% block scripts %}
+      <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+      <script>
+
+          const formatCurrency = (value) => {
+            const numericValue = parseFloat(value);
+            if (isNaN(numericValue)) {
+              return "R$ 0,00";
+            }
+            return numericValue.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            });
+          };
+
+          document.addEventListener("DOMContentLoaded", function () {
+            const options = {
+              series: [],
+              chart: {
+                type: "area",
+                height: 450,
+                toolbar: { show: true },
+                zoom: { enabled: true },
+                foreColor: "#FFFFFF",
+              },
+              // COR ADICIONADA AQUI
+              colors: [
+                "var(--color-success)", // Pagos
+                "var(--color-secondary)", // Em_Aberto
+                "var(--color-warning)", // a_receber
+                "var(--color-primary)", // recebidos
+              ],
+              dataLabels: { enabled: false },
+              stroke: { show: true, width: 4, curve: "smooth", },
+              fill: {type: "gradient",gradient:
+                  {shade: "light",shadeIntensity: 0.5 ,opacityFrom: 0.5 ,opacityTo: 0.5,stops: [0, 90, 100],},
+              },
+              markers: { size: 4 },
+              xaxis: {
+                type: "datetime",
+                labels: {
+                  format: "MMMM/yy",
+                  datetimeUTC: false,
+                },
+              },
+              yaxis: {
+                title: { text: "Valor (R$)" },
+                labels: {
+                  formatter: (val) =>
+                    "R$ " +
+                    Math.abs(val).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }),
+                },
+              },
+              grid: {
+                borderColor: "hsl(var(--b3))",
+              },
+              legend: {
+                position: "top",
+                horizontalAlign: "left",
+              },
+              tooltip: {
+                theme: "dark",
+                x: { format: "dd MMMM yyyy" },
+                y: {
+                  formatter: (val) =>
+                    "R$ " +
+                    Math.abs(val).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }),
+                },
+              },
+              noData: {
+                text: "Carregando ou sem dados para o período...",
+              },
+            };
+
+            const chart = new ApexCharts(
+              document.querySelector("#financeiroChart"),
+              options
+            );
+            chart.render();
+
+            function updateKpiTitles() {
+              const today = new Date();
+              const titlesIds = [
+                "kpi-next-one-title",
+                "kpi-next-two-title",
+                "kpi-next-three-title",
+                "kpi-next-four-title",
+                "kpi-next-five-title",
+                "kpi-next-six-title",
+              ];
+
+              titlesIds.forEach((id, index) => {
+                const futureMonth = new Date(
+                  today.getFullYear(),
+                  today.getMonth() + index,
+                  1
+                );
+                const monthName = futureMonth.toLocaleString("pt-br", {
+                  month: "long",
+                });
+                document.getElementById(id).textContent =
+                  monthName.charAt(0).toUpperCase() + monthName.slice(1);
+              });
+            }
+
+            function fetchData(start = "", end = "", granularity = "month") {
+              const kpiValueIds = [
+                "kpi-next-one-value",
+                "kpi-next-two-value",
+                "kpi-next-three-value",
+                "kpi-next-four-value",
+                "kpi-next-five-value",
+                "kpi-next-six-value",
+              ];
+              const kpiKeys = [
+                "next_one",
+                "next_two",
+                "next_three",
+                "next_four",
+                "next_five",
+                "next_six",
+              ];
+              const apiUrl = `{% url 'fluxo_caixa:api_painel_financeiro' %}?startdate=${start}&finaldate=${end}&granularity=${granularity}`;
+
+              fetch(apiUrl)
+                .then((response) => {
+                  if (!response.ok)
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  return response.json();
+                })
+                .then((data) => {
+                  chart.updateSeries(data.timeline_series || []);
+
+                  kpiKeys.forEach((key, index) => {
+                    if (data.kpis && data.kpis[key] !== undefined) {
+                      const value = parseFloat(data.kpis[key]);
+                      document.getElementById(kpiValueIds[index]).textContent =
+                        value.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        });
+                    }
+                  });
+                })
+                .catch((error) => {
+                  console.error("Erro ao buscar dados da API:", error);
+                  chart.updateSeries([]);
+                });
+            }
+
+            function applyFilters() {
+              const startDate = document.getElementById("startDate").value;
+              const endDate = document.getElementById("endDate").value;
+              const granularity = document.getElementById("granularity").value;
+              fetchData(startDate, endDate, granularity);
+            }
+
+            document
+              .getElementById("filterButton")
+              .addEventListener("click", applyFilters);
+
+            updateKpiTitles();
+            applyFilters();
+          });
+
+          function setupTab2() {
+            const tableBody = document.getElementById("tabela-corpo-fluxo");
+            const kpiElements = {
+              total_receitas: document.getElementById("kpi-receitas"),
+              total_despesas: document.getElementById("kpi-despesas"),
+              saldo_final: document.getElementById("kpi-saldo"),
+            };
+
+            const renderTable = (data = []) => {
+              if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center">Nenhum dado encontrado para o período.</td></tr>`;
+                return;
+              }
+              // Esta função agora espera as colunas do backend otimizado
+              tableBody.innerHTML = data.map((row) => {
+                  const movimentoDia = parseFloat(row.MovimentoDia || 0);
+                  const saldoAcumulado = parseFloat(row.SaldoAcumulado || row.SaldoFinal || 0);
+
+                  return `
+                  <tr class="shadow-accent">
+                      <td >${row.Periodo}</td>
+                      <td class="text-right hover:bg-accent hover:text-accent-content-content font-stretch-normal text-base-content">${row.Recebidos > 0 ? formatCurrency(row.Recebidos) : ""}</td>
+                      <td class="text-right hover:bg-success hover:text-success-content font-stretch-normal text-base-content">${row.Areceber > 0 ? formatCurrency(row.Areceber) : ""}</td>
+                      <td class="text-right hover:bg-error hover:text-error-content font-stretch-normal text-base-content">${row.Pagamentos < 0 ? formatCurrency(Math.abs(row.Pagamentos)): ""}</td>
+                      <td class="text-right hover:bg-warning hover:text-warning-content font-stretch-normal text-base-content">${row.Apagar < 0 ? formatCurrency(Math.abs(row.Apagar)) : ""}</td>
+                      <td class="hover:bg-gradient-to-r from-green-white to-gray-600 font-stretch-normal text-right ${movimentoDia >= 0 ? "text-accent" : "text-error"}">${formatCurrency(movimentoDia)}</td>
+                      <td class="hover:bg-gradient-to-r from-green-white to-gray-600 font-stretch-normal text-right ${saldoAcumulado >= 0 ? "text-accent" : "text-error"}">${formatCurrency(saldoAcumulado)}</td>
+                  </tr>`;
+              }).join("");
+            };
+
+            const updateKpis = (kpis = {}) => {
+              kpiElements.total_receitas.textContent = formatCurrency(kpis.total_receitas || 0);
+              kpiElements.total_despesas.textContent = formatCurrency(kpis.total_despesas || 0);
+              kpiElements.saldo_final.textContent = formatCurrency(kpis.saldo_final || 0);
+            };
+
+            const fetchAndRender = async () => {
+              tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center"><span class="loading loading-spinner"></span></td></tr>`;
+
+              // 2. JAVASCRIPT CORRIGIDO: Lendo a granularidade do novo seletor
+              const startDate = document.getElementById("startDate2").value;
+              const endDate = document.getElementById("endDate2").value;
+              const granularity = document.getElementById("granularity2").value;
+
+              const apiUrl = `{% url 'fluxo_caixa:fluxo_caixa_api_view' %}?startdate=${startDate}&finaldate=${endDate}&granularity=${granularity}`;
+
+              try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const apiData = await response.json();
+
+                renderTable(apiData.data);
+                updateKpis(apiData.kpis);
+              } catch (error) {
+                console.error("Erro ao buscar dados do fluxo de caixa:", error);
+                renderTable([]);
+                updateKpis();
+              }
+            };
+
+            document.getElementById("filterButton2").addEventListener("click", fetchAndRender);
+
+            // Adiciona um listener para o novo seletor de granularidade
+            document.getElementById("granularity2").addEventListener("change", fetchAndRender);
+
+            fetchAndRender(); // Carga inicial
+          }
+
+          setupTab2();
+      
+
+      </script>
+
+      {% endblock %}
+    </div>
+  </div>
+</div>
