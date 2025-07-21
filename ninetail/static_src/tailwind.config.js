@@ -6,19 +6,22 @@ module.exports = {
                  './**/*.html',
                ],
                theme: {
-                 extend: {
-                   keyframes: {
-                     tilt: {
-                       '0%, 50%, 100%': { transform: 'rotate(0deg)' },
-                       '25%': { transform: 'rotate(0.5deg)' },
-                       '75%': { transform: 'rotate(-0.5deg)' },
-                     },
-                   },
-                   animation: {
-                     tilt: 'tilt 10s infinite linear',
-                   },
-                 },
-               },
-               plugins: [],
-             }
-             
+                extend: {
+                  keyframes: { // keyframes começa e termina aqui
+                    'rotate': {
+                      '0%': {
+                        transform: 'translate(-50%, -50%) rotate(0deg)'
+                      },
+                      '100%': {
+                        transform: 'translate(-50%, -50%) rotate(1turn)'
+                      },
+                    },
+                  },
+                  animation: { // 'animation' agora está no mesmo nível de 'keyframes'
+                    'rotate': 'rotate 4s linear infinite',
+                  },
+                },
+              },
+              plugins: [],
+            }
+          

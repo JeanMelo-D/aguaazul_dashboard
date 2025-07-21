@@ -21,7 +21,8 @@ def mapas_aguaazul() -> pl.LazyFrame:
         pl.col("U_CooX"),
         pl.col("U_CooY"),
         pl.col("U_CooZ"),
-        pl.col("SVG").cast(pl.String), # O SVG aqui ainda é só o final do path
+        pl.col("SVG").cast(pl.String),
+        pl.col("Status").cast(pl.String),
     )
 
 def view_mapa_por_talhao(codigo_talhao: str) -> pl.DataFrame:
@@ -29,6 +30,9 @@ def view_mapa_por_talhao(codigo_talhao: str) -> pl.DataFrame:
     Retorna os dados de um talhão específico, com a URL do SVG completa.
     """
     lazy_df = mapas_aguaazul()
+    lazy_df = lazy_df.filter(
+        pl.col('Status')=='A'
+    )
 
     lazy_df_filtrado = lazy_df.filter(
         pl.col("CodTalhao") == codigo_talhao

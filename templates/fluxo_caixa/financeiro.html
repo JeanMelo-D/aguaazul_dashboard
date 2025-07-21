@@ -1,9 +1,7 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Dashboard Financeiro - Água Azul{% endblock %} 
-{% block content %}
-
+{% extends "base.html" %} {% load static %} {% block title %}Dashboard
+Financeiro - Água Azul{% endblock %} {% block content %}
 <div role="tablist" class="tabs tabs-lifted">
+  <!-- ########## ABA 1: VISÃO GERAL ########## -->
   <input
     type="radio"
     name="dashboard_tabs"
@@ -19,14 +17,15 @@
     <div class="space-y-8">
       <div>
         <h2 class="mb-4 text-2xl font-bold text-base-content">
-          Próximos Vencimentos
+          Próximos Vencimentos (Contas a Pagar)
         </h2>
         <div class="grid grid-cols-2 gap-5 mb-8 md:grid-cols-3 lg:grid-cols-6">
           <div
             class="p-5 text-center border-l-[5px] rounded-xl bg-base-100 shadow-lg border-primary"
           >
             <h4
-              class="mb-2 text-sm font-semibold capitalize text-base-content/70"
+              class="mb-2 font-semibold capitalize text-SM text-base-content/70"
+              class="text-2xl"
               id="kpi-next-one-title"
             >
               Carregando...
@@ -35,7 +34,10 @@
               class="flex items-start justify-center text-3xl font-bold text-base-content"
             >
               <span class="mr-1 text-base font-medium">R$</span
-              ><span id="kpi-next-one-value">0,00</span>
+              ><span 
+              class="text-2xl" 
+              id="kpi-next-one-value"
+                          >0,00</span>
             </p>
           </div>
           <div
@@ -44,6 +46,7 @@
             <h4
               class="mb-2 text-sm font-semibold capitalize text-base-content/70"
               id="kpi-next-two-title"
+              class="text-2xl"
             >
               Carregando...
             </h4>
@@ -51,7 +54,7 @@
               class="flex items-start justify-center text-3xl font-bold text-base-content"
             >
               <span class="mr-1 text-base font-medium">R$</span
-              ><span id="kpi-next-two-value">0,00</span>
+              ><span class="text-2xl" id="kpi-next-two-value">0,00</span>
             </p>
           </div>
           <div
@@ -67,7 +70,7 @@
               class="flex items-start justify-center text-3xl font-bold text-base-content"
             >
               <span class="mr-1 text-base font-medium">R$</span
-              ><span id="kpi-next-three-value">0,00</span>
+              ><span id="kpi-next-three-value" class="text-2xl" >0,00</span>
             </p>
           </div>
           <div
@@ -83,7 +86,7 @@
               class="flex items-start justify-center text-3xl font-bold text-base-content"
             >
               <span class="mr-1 text-base font-medium">R$</span
-              ><span id="kpi-next-four-value">0,00</span>
+              ><span class="text-2xl" id="kpi-next-four-value">0,00</span>
             </p>
           </div>
           <div
@@ -99,7 +102,7 @@
               class="flex items-start justify-center text-3xl font-bold text-base-content"
             >
               <span class="mr-1 text-base font-medium">R$</span
-              ><span id="kpi-next-five-value">0,00</span>
+              ><span class="text-2xl" id="kpi-next-five-value">0,00</span>
             </p>
           </div>
           <div
@@ -115,48 +118,146 @@
               class="flex items-start justify-center text-3xl font-bold text-base-content"
             >
               <span class="mr-1 text-base font-medium">R$</span
-              ><span id="kpi-next-six-value">0,00</span>
+              ><span  class="text-2xl" id="kpi-next-six-value">0,00</span>
             </p>
           </div>
         </div>
       </div>
-
       <div class="p-6 shadow-lg bg-base-100 rounded-xl">
         <h2 class="mb-6 text-xl font-bold text-base-content">
-          Fluxo de Caixa: Entradas vs. Saídas
+          Visão Geral do Fluxo de Caixa
         </h2>
         <div class="flex flex-wrap items-center gap-4 mb-5">
           <label for="startDate" class="font-medium">De:</label>
           <input
             type="date"
             id="startDate"
-            class="w-full max-w-xs input input-bordered input-sm"
+            class="max-w-xs input input-bordered input-sm"
           />
           <label for="endDate" class="font-medium">Até:</label>
           <input
             type="date"
             id="endDate"
-            class="w-full max-w-xs input input-bordered input-sm"
+            class="max-w-xs input input-bordered input-sm"
           />
           <label for="granularity" class="font-medium">Agrupar por:</label>
           <select
             id="granularity"
-            class="w-full max-w-xs select select-bordered select-sm"
+            class="max-w-xs select select-bordered select-sm"
           >
-            <option value="month" selected>Mês</option>
-            <option value="week">Semana</option>
             <option value="day">Dia</option>
+            <option value="week">Semana</option>
+            <option value="month" selected>Mês</option>
             <option value="year">Ano</option>
           </select>
           <button id="filterButton" class="btn btn-primary btn-sm">
-            Filtrar
+            Filtrar Gráfico
           </button>
         </div>
         <div id="financeiroChart"></div>
       </div>
     </div>
   </div>
-  {% comment %} Aqui começa a Tab 2  {% endcomment %}
+
+  <!-- ########## ABA 2: CONTAS A PAGAR ########## -->
+  <input
+    type="radio"
+    name="dashboard_tabs"
+    role="tab"
+    class="tab"
+    aria-label="Contas a Pagar"
+  />
+  <div
+    role="tabpanel"
+    class="p-6 tab-content bg-base-100 border-base-100 rounded-box"
+  >
+    <div class="container p-4 mx-auto sm:p-8 lg:p-8">
+      <h1 class="mb-6 text-2xl font-extralight sm:text-4xl text-success">
+        Detalhado: Contas a Pagar em Aberto
+      </h1>
+      <div
+        class="flex flex-row items-start justify-center gap-10 p-4 mb-6 rounded-lg bg-base-300"
+      >
+        <div>
+          <label for="cp_startDate" class="block mb-1 text-sm font-medium"
+            >Data Inicial</label
+          >
+          <input
+            id="cp_startDate"
+            type="date"
+            class="input input-sm input-bordered w-55"
+          />
+        </div>
+        <div>
+          <label for="cp_endDate" class="block mb-1 text-sm font-medium"
+            >Data Final</label
+          >
+          <input
+            id="cp_endDate"
+            type="date"
+            class="input input-sm input-bordered w-55"
+          />
+        </div>
+        <div class="w-96">
+          <label class="block mb-1 text-sm font-medium">Fornecedores</label>
+          <div id="fornecedor_tags_container" class="flex flex-wrap gap-2 p-2 mb-1 bg-base-100 rounded-md min-h-[40px]">
+              </div>
+          <div class="relative">
+            <input type="text" id="cp_fornecedor_input" placeholder="Digite para buscar e adicionar..." class="w-full input input-bordered input-sm" autocomplete="off" />
+            <div id="fornecedor_suggestions" class="absolute z-10 hidden w-full mt-1 overflow-y-auto rounded-md shadow-lg bg-base-200 max-h-60"></div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+            <button id="cp_filterButton" class="btn btn-success">Filtrar Tabela</button>
+            <button id="cp_clearButton" class="btn btn-ghost btn-square" title="Limpar filtros">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <button id="btn-download-csv" class="btn btn-primary">
+          <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+          Baixar XLSX
+      </button>
+      
+      </div>
+      
+      <div class="flex items-center justify-center mb-4">
+        <button id="btn-anterior-cp" class="btn btn-sm">Anterior</button>
+        <span id="info-pagina-cp" class="mx-4 text-sm">Página 1 de 1</span>
+        <button id="btn-proxima-cp" class="btn btn-sm">Próxima</button>
+      </div>
+      <div class="overflow-hidden rounded-lg shadow-md bg-base-300">
+        <div class="p-2 overflow-x-auto shadow-2xl shadow-accent">
+          <table class="min-w-full text-sm text-left text-base-content">
+            <thead
+              class="text-xs font-semibold uppercase bg-base-300 text-base-content"
+            >
+              <tr>
+                <th class="px-6 py-3">Vencimento</th>
+                <th class="px-6 py-3 text-right">Valor Total</th>
+                <th class="px-6 py-3 text-center">Nº. Documentos</th>
+                <th class="px-6 py-3" colspan="5"></th>
+              </tr>
+            </thead>
+            <tbody
+              id="drilldown-table-body"
+              class="divide-y divide-base-300"
+            ></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-center text-base-content">
+        Clique em uma linha para expandir e ver os detalhes.
+      </p>
+    </div>
+    <div class="toast toast-bottom toast-end" id="total-toast">
+      <div class="alert alert-info"><span>Total Selecionado:</span></div>
+      <div class="alert alert-success" id="total-selecionado-span">
+        <span>R$ 0,00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ########## ABA 3: FLUXO DE CAIXA ########## -->
   <input
     type="radio"
     name="dashboard_tabs"
@@ -168,350 +269,506 @@
     role="tabpanel"
     class="p-6 tab-content bg-base-100 border-base-300 rounded-box"
   >
-    <div class="overflow-x-auto">
-      <div class="container p-4 mx-auto md:p-8">
-        <div class="flex flex-wrap items-center mb-5 p-6gap-4">
-
-
-        <h1 class="mb-6 text-4xl font-bold">{{ page_title }}</h1>
-
-        <div class="w-full mb-8 shadow hover:border-white stats stats-vertical lg:stats-horizontal ">
-          <div class="stat bg-base-300">
-            <div class="card-title text-2xl font-bold
-            text-neutral-content
-            bg-gradient-to-r from-primary to-accent
-            bg-[length:0%_10px] bg-no-repeat bg-left-bottom
-            hover:bg-[length:100%_2px] transition-all duration-500">
-                Receitas
-            </div>
-            <div class='stat-title'> (Realizadas + Previstas) </div>
-            <div class="stat-value text-accent" id="kpi-receitas">
-              Carregando...
-            </div>
-            <div class="stat-desc">Total de entradas no período</div>
+    <div class="container p-4 mx-auto md:p-8">
+      <h1 class="mb-6 text-2xl font-bold sm:text-3xl">
+        Análise de Fluxo de Caixa
+      </h1>
+      <div class="w-full mb-8 shadow stats stats-vertical lg:stats-horizontal">
+        <div class="stat">
+          <div class="stat-title">Receitas</div>
+          <div class="stat-value text-success" id="kpi-receitas">
+            Carregando...
           </div>
-
-          <div class="stat bg-base-300">
-            <div class="card-title text-2xl font-bold
-            text-neutral-content
-            bg-gradient-to-r from-primary to-accent
-            bg-[length:0%_10px] bg-no-repeat bg-left-bottom
-            hover:bg-[length:100%_2px] transition-all duration-500">
-                Despesas
-            </div>
-            <div class='stat-title'> (Pagas + A Pagar) </div>
-            <div class="stat-value text-error" id="kpi-despesas">
-              Carregando...
-            </div>
-            <div class="stat-desc">Total de saídas no período</div>
-          </div>
-          <div class="stat bg-base-300">
-            <div class="card-title text-2xl font-bold
-            text-neutral-content
-            bg-gradient-to-r from-warning to-accent
-            bg-[length:0%_10px] bg-no-repeat bg-left-bottom
-            hover:bg-[length:100%_2px] transition-all duration-500">
-                Saldo
-            </div>
-            <div class='stat-title'> (receitas - Despesas) </div>
-            <div class="stat-value" id="kpi-saldo">Carregando...</div>
-            <div class="stat-desc">Saldo acumulado na última data</div>
-          </div>
+          <div class="stat-desc">Total de entradas no período</div>
         </div>
-
-        <label for="startDate2" class="p-2 font-medium">De:</label>
-        <input
-          type="date"
-          id="startDate2"
-          class="w-full max-w-xs input input-bordered input-sm"
-        />
-
-        <label for="endDate2" class="p-2 font-medium">Até:</label>
-        <input
-          type="date"
-          id="endDate2"
-          class="w-full max-w-xs input input-bordered input-sm"
-        />
-        <label for="granularity2" class="p-2 font-medium">Agrupar por:</label>
-        <select
-          id="granularity2"
-          class="w-full max-w-xs select select-bordered select-sm"
-        >
-          <option value="day">Dia</option>
-          <option value="week">Semana</option>
-          <option value="month"selected >Mês</option>
-          <option value="year">Ano</option>
-        </select>
-
-        <button id="filterButton2" class="btn btn-error btn-sm">
-          Filtrar
-        </button>
-      </div>
-
-        <div class="overflow-x-auto">
-          <table class="table w-full hover bg-base-300">
-            <thead class="text-base">
-              <tr >
-                <th class='bg-base-content text-base-300'>Data</th>
-                <th class="text-right bg-base-content text-base-300">Recebidos</th>
-                <th class="text-right bg-base-content text-base-300">A Receber</th>
-                <th class="text-right bg-base-content text-base-300">Pagamentos</th>
-                <th class="text-right bg-base-content text-base-300">A Pagar</th>
-                <th class="text-right bg-base-content text-base-300">Mov. do Dia</th>
-                <th class="font-bold text-right bg-base-content text-base-300">Saldo Acumulado</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-corpo-fluxo"></tbody>
-          </table>
+        <div class="stat">
+          <div class="stat-title">Despesas</div>
+          <div class="stat-value text-error" id="kpi-despesas">
+            Carregando...
+          </div>
+          <div class="stat-desc">Total de saídas no período</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Saldo</div>
+          <div class="stat-value" id="kpi-saldo">Carregando...</div>
+          <div class="stat-desc">Saldo acumulado no final do período</div>
         </div>
       </div>
-
-      {% endblock %} {% block scripts %}
-      <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-      <script>
-
-          const formatCurrency = (value) => {
-            const numericValue = parseFloat(value);
-            if (isNaN(numericValue)) {
-              return "R$ 0,00";
-            }
-            return numericValue.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            });
-          };
-
-          document.addEventListener("DOMContentLoaded", function () {
-            const options = {
-              series: [],
-              chart: {
-                type: "area",
-                height: 450,
-                toolbar: { show: true },
-                zoom: { enabled: true },
-                foreColor: "#FFFFFF",
-              },
-              // COR ADICIONADA AQUI
-              colors: [
-                "var(--color-success)", // Pagos
-                "var(--color-secondary)", // Em_Aberto
-                "var(--color-warning)", // a_receber
-                "var(--color-primary)", // recebidos
-              ],
-              dataLabels: { enabled: false },
-              stroke: { show: true, width: 4, curve: "smooth", },
-              fill: {type: "gradient",gradient:
-                  {shade: "light",shadeIntensity: 0.5 ,opacityFrom: 0.5 ,opacityTo: 0.5,stops: [0, 90, 100],},
-              },
-              markers: { size: 4 },
-              xaxis: {
-                type: "datetime",
-                labels: {
-                  format: "MMMM/yy",
-                  datetimeUTC: false,
-                },
-              },
-              yaxis: {
-                title: { text: "Valor (R$)" },
-                labels: {
-                  formatter: (val) =>
-                    "R$ " +
-                    Math.abs(val).toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    }),
-                },
-              },
-              grid: {
-                borderColor: "hsl(var(--b3))",
-              },
-              legend: {
-                position: "top",
-                horizontalAlign: "left",
-              },
-              tooltip: {
-                theme: "dark",
-                x: { format: "dd MMMM yyyy" },
-                y: {
-                  formatter: (val) =>
-                    "R$ " +
-                    Math.abs(val).toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    }),
-                },
-              },
-              noData: {
-                text: "Carregando ou sem dados para o período...",
-              },
-            };
-
-            const chart = new ApexCharts(
-              document.querySelector("#financeiroChart"),
-              options
-            );
-            chart.render();
-
-            function updateKpiTitles() {
-              const today = new Date();
-              const titlesIds = [
-                "kpi-next-one-title",
-                "kpi-next-two-title",
-                "kpi-next-three-title",
-                "kpi-next-four-title",
-                "kpi-next-five-title",
-                "kpi-next-six-title",
-              ];
-
-              titlesIds.forEach((id, index) => {
-                const futureMonth = new Date(
-                  today.getFullYear(),
-                  today.getMonth() + index,
-                  1
-                );
-                const monthName = futureMonth.toLocaleString("pt-br", {
-                  month: "long",
-                });
-                document.getElementById(id).textContent =
-                  monthName.charAt(0).toUpperCase() + monthName.slice(1);
-              });
-            }
-
-            function fetchData(start = "", end = "", granularity = "month") {
-              const kpiValueIds = [
-                "kpi-next-one-value",
-                "kpi-next-two-value",
-                "kpi-next-three-value",
-                "kpi-next-four-value",
-                "kpi-next-five-value",
-                "kpi-next-six-value",
-              ];
-              const kpiKeys = [
-                "next_one",
-                "next_two",
-                "next_three",
-                "next_four",
-                "next_five",
-                "next_six",
-              ];
-              const apiUrl = `{% url 'fluxo_caixa:api_painel_financeiro' %}?startdate=${start}&finaldate=${end}&granularity=${granularity}`;
-
-              fetch(apiUrl)
-                .then((response) => {
-                  if (!response.ok)
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                  return response.json();
-                })
-                .then((data) => {
-                  chart.updateSeries(data.timeline_series || []);
-
-                  kpiKeys.forEach((key, index) => {
-                    if (data.kpis && data.kpis[key] !== undefined) {
-                      const value = parseFloat(data.kpis[key]);
-                      document.getElementById(kpiValueIds[index]).textContent =
-                        value.toLocaleString("pt-BR", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        });
-                    }
-                  });
-                })
-                .catch((error) => {
-                  console.error("Erro ao buscar dados da API:", error);
-                  chart.updateSeries([]);
-                });
-            }
-
-            function applyFilters() {
-              const startDate = document.getElementById("startDate").value;
-              const endDate = document.getElementById("endDate").value;
-              const granularity = document.getElementById("granularity").value;
-              fetchData(startDate, endDate, granularity);
-            }
-
-            document
-              .getElementById("filterButton")
-              .addEventListener("click", applyFilters);
-
-            updateKpiTitles();
-            applyFilters();
-          });
-
-          function setupTab2() {
-            const tableBody = document.getElementById("tabela-corpo-fluxo");
-            const kpiElements = {
-              total_receitas: document.getElementById("kpi-receitas"),
-              total_despesas: document.getElementById("kpi-despesas"),
-              saldo_final: document.getElementById("kpi-saldo"),
-            };
-
-            const renderTable = (data = []) => {
-              if (data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center">Nenhum dado encontrado para o período.</td></tr>`;
-                return;
-              }
-              // Esta função agora espera as colunas do backend otimizado
-              tableBody.innerHTML = data.map((row) => {
-                  const movimentoDia = parseFloat(row.MovimentoDia || 0);
-                  const saldoAcumulado = parseFloat(row.SaldoAcumulado || row.SaldoFinal || 0);
-
-                  return `
-                  <tr class="shadow-accent">
-                      <td >${row.Periodo}</td>
-                      <td class="text-right hover:bg-accent hover:text-accent-content-content font-stretch-normal text-base-content">${row.Recebidos > 0 ? formatCurrency(row.Recebidos) : ""}</td>
-                      <td class="text-right hover:bg-success hover:text-success-content font-stretch-normal text-base-content">${row.Areceber > 0 ? formatCurrency(row.Areceber) : ""}</td>
-                      <td class="text-right hover:bg-error hover:text-error-content font-stretch-normal text-base-content">${row.Pagamentos < 0 ? formatCurrency(Math.abs(row.Pagamentos)): ""}</td>
-                      <td class="text-right hover:bg-warning hover:text-warning-content font-stretch-normal text-base-content">${row.Apagar < 0 ? formatCurrency(Math.abs(row.Apagar)) : ""}</td>
-                      <td class="hover:bg-gradient-to-r from-green-white to-gray-600 font-stretch-normal text-right ${movimentoDia >= 0 ? "text-accent" : "text-error"}">${formatCurrency(movimentoDia)}</td>
-                      <td class="hover:bg-gradient-to-r from-green-white to-gray-600 font-stretch-normal text-right ${saldoAcumulado >= 0 ? "text-accent" : "text-error"}">${formatCurrency(saldoAcumulado)}</td>
-                  </tr>`;
-              }).join("");
-            };
-
-            const updateKpis = (kpis = {}) => {
-              kpiElements.total_receitas.textContent = formatCurrency(kpis.total_receitas || 0);
-              kpiElements.total_despesas.textContent = formatCurrency(kpis.total_despesas || 0);
-              kpiElements.saldo_final.textContent = formatCurrency(kpis.saldo_final || 0);
-            };
-
-            const fetchAndRender = async () => {
-              tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center"><span class="loading loading-spinner"></span></td></tr>`;
-
-              // 2. JAVASCRIPT CORRIGIDO: Lendo a granularidade do novo seletor
-              const startDate = document.getElementById("startDate2").value;
-              const endDate = document.getElementById("endDate2").value;
-              const granularity = document.getElementById("granularity2").value;
-
-              const apiUrl = `{% url 'fluxo_caixa:fluxo_caixa_api_view' %}?startdate=${startDate}&finaldate=${endDate}&granularity=${granularity}`;
-
-              try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                const apiData = await response.json();
-
-                renderTable(apiData.data);
-                updateKpis(apiData.kpis);
-              } catch (error) {
-                console.error("Erro ao buscar dados do fluxo de caixa:", error);
-                renderTable([]);
-                updateKpis();
-              }
-            };
-
-            document.getElementById("filterButton2").addEventListener("click", fetchAndRender);
-
-            // Adiciona um listener para o novo seletor de granularidade
-            document.getElementById("granularity2").addEventListener("change", fetchAndRender);
-
-            fetchAndRender(); // Carga inicial
-          }
-
-          setupTab2();
-      
-
-      </script>
-
-      {% endblock %}
+      <div
+        class="flex flex-wrap items-end gap-4 p-4 mb-6 rounded-lg bg-base-200"
+      >
+        <div>
+          <label for="fc_startDate" class="block mb-1 text-sm font-medium"
+            >De:</label
+          >
+          <input
+            type="date"
+            id="fc_startDate"
+            class="w-full max-w-xs input input-bordered input-sm"
+          />
+        </div>
+        <div>
+          <label for="fc_endDate" class="block mb-1 text-sm font-medium"
+            >Até:</label
+          >
+          <input
+            type="date"
+            id="fc_endDate"
+            class="w-full max-w-xs input input-bordered input-sm"
+          />
+        </div>
+        <div>
+          <label for="fc_granularity" class="block mb-1 text-sm font-medium"
+            >Agrupar por:</label
+          >
+          <select
+            id="fc_granularity"
+            class="w-full max-w-xs select select-bordered select-sm"
+          >
+            <option value="day">Dia</option>
+            <option value="week">Semana</option>
+            <option value="month" selected>Mês</option>
+            <option value="year">Ano</option>
+          </select>
+        </div>
+        <div>
+          <button id="fc_filterButton" class="btn btn-secondary btn-sm">
+            Analisar
+          </button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="table w-full">
+          <thead>
+            <tr>
+              <th>Período</th>
+              <th class="text-right">Recebidos</th>
+              <th class="text-right">A Receber</th>
+              <th class="text-right">Pagamentos</th>
+              <th class="text-right">A Pagar</th>
+              <th class="text-right">Mov. do Período</th>
+              <th class="text-right">Saldo Acumulado</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-corpo-fluxo"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
+{% endblock %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide/dist/umd/lucide.min.js"></script>
+
+<script>
+  // --- PONTO DE ENTRADA PRINCIPAL ---
+  document.addEventListener("DOMContentLoaded", function () {
+    setupVisaoGeral();
+    setupContasAPagarDrilldown();
+    setupFluxoDeCaixa();
+    lucide.createIcons();
+    
+  });
+
+  // --- FUNÇÃO HELPER GLOBAL ---
+  const formatCurrency = (value) => {
+    const numericValue = parseFloat(value);
+    if (isNaN(numericValue)) return "R$ 0,00";
+    return numericValue.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
+  // --- LÓGICA PARA ABA 1: VISÃO GERAL ---
+  function setupVisaoGeral() {
+    const chartElement = document.querySelector("#financeiroChart");
+    if (!chartElement) return;
+
+    const options = {
+      series: [],
+      chart: {
+        type: "area",
+        height: 450,
+        toolbar: { show: true },
+        zoom: { enabled: true },
+        foreColor: "var(--color-base-content)",
+      },
+      colors: [
+        "var(--color-success)",
+        "var(--color-secondary)",
+        "var(--color-warning)",
+        "var(--color-primary)",
+      ],
+      dataLabels: { enabled: false },
+      stroke: { show: true, width: 4, curve: "smooth" },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shade: "light",
+          shadeIntensity: 0.5,
+          opacityFrom: 0.5,
+          opacityTo: 0.5,
+          stops: [0, 90, 100],
+        },
+      },
+      markers: { size: 4 },
+      xaxis: {
+        type: "datetime",
+        labels: { format: "MMMM/yy", datetimeUTC: false },
+      },
+      yaxis: {
+        title: { text: "Valor (R$)" },
+        labels: {
+          formatter: (val) =>
+            "R$ " +
+            Math.abs(val).toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
+        },
+      },
+      grid: { borderColor: "hsl(var(--color-base-content))" },
+      legend: { position: "top", horizontalAlign: "left" },
+      tooltip: {
+        theme: "dark",
+        x: { format: "dd MMMM yyyy" },
+        y: {
+          formatter: (val) =>
+            "R$ " +
+            Math.abs(val).toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
+        },
+      },
+      noData: { text: "Carregando ou sem dados para o período..." },
+    };
+    const chart = new ApexCharts(chartElement, options);
+    chart.render();
+
+    function updateKpiTitles() {
+      const today = new Date();
+      const titleIds = [
+        "kpi-next-one-title",
+        "kpi-next-two-title",
+        "kpi-next-three-title",
+        "kpi-next-four-title",
+        "kpi-next-five-title",
+        "kpi-next-six-title",
+      ];
+      titleIds.forEach((id, index) => {
+        const futureMonth = new Date(
+          today.getFullYear(),
+          today.getMonth() + index,
+          1
+        );
+        const monthName = futureMonth.toLocaleString("pt-br", {
+          month: "long",
+        });
+        const titleElement = document.getElementById(id);
+        if (titleElement) {
+          titleElement.textContent =
+            monthName.charAt(0).toUpperCase() + monthName.slice(1);
+        }
+      });
+    }
+
+    const fetchDataForChartAndKPIs = () => {
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      const granularity = document.getElementById("granularity").value;
+      const apiUrl = `{% url 'fluxo_caixa:api_painel_financeiro' %}?startdate=${startDate}&finaldate=${endDate}&granularity=${granularity}`;
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          chart.updateSeries(data.timeline_series || []);
+          const kpiValueIds = {
+            next_one: "kpi-next-one-value",
+            next_two: "kpi-next-two-value",
+            next_three: "kpi-next-three-value",
+            next_four: "kpi-next-four-value",
+            next_five: "kpi-next-five-value",
+            next_six: "kpi-next-six-value",
+          };
+          for (const key in kpiValueIds) {
+            if (data.kpis && data.kpis[key] !== undefined) {
+              const value = parseFloat(data.kpis[key]);
+              const valueElement = document.getElementById(kpiValueIds[key]);
+              if (valueElement) {
+                valueElement.textContent = value.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                });
+              }
+            }
+          }
+        })
+        .catch((error) =>
+          console.error("Erro ao buscar dados do gráfico e KPIs:", error)
+        );
+    };
+
+    document
+      .getElementById("filterButton")
+      .addEventListener("click", fetchDataForChartAndKPIs);
+    updateKpiTitles();
+    fetchDataForChartAndKPIs();
+  }
+
+  // --- LÓGICA PARA ABA 2: CONTAS A PAGAR ---
+  function setupContasAPagarDrilldown(){
+    const tableBody = document.getElementById("drilldown-table-body");
+    const toastElement = document.getElementById("total-toast");
+    const totalSpan = document.getElementById("total-selecionado-span");
+    const fornecedorInput = document.getElementById("cp_fornecedor_input");
+    const tagsContainer = document.getElementById("fornecedor_tags_container");
+    const suggestionsContainer = document.getElementById("fornecedor_suggestions");
+    const btnAnteriorCP = document.getElementById("btn-anterior-cp");
+    const btnProximaCP = document.getElementById("btn-proxima-cp");
+    const infoPaginaCP = document.getElementById("info-pagina-cp");
+    const filterButton = document.getElementById("cp_filterButton");
+    const clearButton = document.getElementById("cp_clearButton");
+    const downloadBtn = document.getElementById('btn-download-csv'); // [NOVO VISUAL]
+    
+    let currentPageCP = 1;
+    let selectedFornecedores = [];
+
+    if (!tableBody || !fornecedorInput || !suggestionsContainer || !filterButton || !tagsContainer || !clearButton || !downloadBtn) {
+        console.error("ERRO: Elementos do DOM não encontrados na ABA 2.");
+        return;
+    }
+
+    // [NOVO VISUAL] Função que renderiza as tags como botões
+    const renderFornecedorTags = () => {
+        tagsContainer.innerHTML = '';
+        selectedFornecedores.forEach(fornecedor => {
+            const tag = document.createElement('div');
+            tag.className = 'btn btn-sm btn-outline no-animation gap-2';
+            tag.innerHTML = `<span>${fornecedor}</span><button data-fornecedor="${fornecedor}" class="remove-tag-btn text-error">×</button>`;
+            tagsContainer.appendChild(tag);
+        });
+    };
+
+    const fetchAndRenderTable = async (page = 1) => {
+        const startDate = document.getElementById("cp_startDate").value;
+        const endDate = document.getElementById("cp_endDate").value;
+        const baseUrl = "{% url 'fluxo_caixa:cpaberto' %}";
+        const params = new URLSearchParams({ page });
+        if (startDate) params.append("start_date", startDate);
+        if (endDate) params.append("final_date", endDate);
+        selectedFornecedores.forEach(f => params.append("fornecedor", f));
+
+        const apiUrl = `${baseUrl}?${params.toString()}`;
+        tableBody.innerHTML = `<tr><td colspan="9" class="p-6 text-center"><span class="loading loading-spinner"></span></td></tr>`;
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+            const data = await response.json();
+            renderDrilldownTable(data.results);
+            updatePaginationControls(data);
+        } catch (error) {
+            console.error("Falha ao buscar dados da tabela:", error);
+            tableBody.innerHTML = `<tr><td colspan="9" class="p-6 font-medium text-center text-error">Falha ao carregar dados.</td></tr>`;
+        }
+    };
+
+    const fetchFornecedores = async (searchTerm) => {
+        if (searchTerm.length < 2) {
+            suggestionsContainer.classList.add("hidden");
+            return;
+        }
+        const url = `{% url 'fluxo_caixa:api_fornecedores' %}?term=${encodeURIComponent(searchTerm)}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const suggestions = data.fornecedores.filter(f => !selectedFornecedores.includes(f));
+            renderSuggestions(suggestions);
+        } catch (error) {
+            console.error("Erro ao buscar fornecedores:", error);
+        }
+    };
+    
+    // O resto das funções auxiliares (renderSuggestions, paginations, etc.) permanece o mesmo...
+    const debounce=(f,d)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f.apply(this,a),d)}};
+    const renderSuggestions=(s)=>{if(!s||s.length===0){suggestionsContainer.classList.add("hidden");return}suggestionsContainer.innerHTML=s.map(i=>`<div class="p-2 text-sm cursor-pointer hover:bg-primary hover:text-primary-content">${i}</div>`).join('');suggestionsContainer.classList.remove("hidden")};
+    
+    const updateSelectedTotal = () => {
+      const checkedBoxes = tableBody.querySelectorAll(".item-checkbox:checked");
+      let total = 0;
+      checkedBoxes.forEach((box) => {
+          total += parseFloat(box.dataset.valor || 0);
+      });
+      totalSpan.textContent = formatCurrency(total);
+      toastElement.style.display = checkedBoxes.length > 0 ? "flex" : "none";
+    };
+
+    const groupDataByVencto=(d)=>d.reduce((a,i)=>{const v=i.Vencto;if(!a[v])a[v]={totalValor:0,docCount:0,items:[]};a[v].totalValor+=parseFloat(i.Valor_em_Aberto||0);a[v].docCount++;a[v].items.push(i);return a},{});
+    const sanitizeId=(i)=>i.replaceAll("/","-");
+    const toggleDetails=(v)=>{const s=sanitizeId(v);
+      document.querySelectorAll(`.detail-for-${s}`).forEach(r=>r.classList.toggle("hidden"));
+      document.getElementById(`arrow-${s}`).classList.toggle("rotate-90")};
+    const renderDrilldownTable=(d)=>{tableBody.innerHTML="";
+      if(!d||d.length===0)
+        {tableBody.innerHTML=`<tr>
+          <td colspan="9" class="p-6 text-center text-base-content">Nenhum dado encontrado.</td>
+          </tr>`;return}
+          const g=groupDataByVencto(d);const s=Object.keys(g).sort((a,b)=>new Date(a.split('/').reverse().join('-'))-new Date(b.split('/').reverse().join('-')));s.forEach(v=>{const o=g[v];const i=sanitizeId(v);const r=`<tr class="cursor-pointer bg-base-100 hover:bg-base-200 text-base-content group-row" data-vencto="${v}"><td class="px-6 py-4 font-medium"><div class="flex items-center"><svg class="w-4 h-4 mr-2 transition-transform rotate-90 text-accent" id="arrow-${i}"fill="none"stroke="currentColor"viewBox="0 0 24 24"><path stroke-linecap="round"stroke-linejoin="round"stroke-width="2"d="M9 5l7 7-7 7"></path></svg><div class='p-2 rounded-md bg-accent text-accent-content'>${v}</div></div></td><td class="px-6 py-4 text-right font-semibold ${o.totalValor<0?"text-error":""}">${formatCurrency(o.totalValor)}</td><td class="px-6 py-4 text-center">${o.docCount}</td><td class="px-6 py-3"colspan="6"></td></tr>`;const t=o.items.map(e=>`<tr class="detail-row detail-for-${i} bg-base-100"><td class="px-6 py-3"colspan="3"></td><td class="px-6 py-3 font-medium">${e.Razao_Social}<span class="block text-xs font-normal text-accent">${e.BPLName}</span></td><td class="px-6 py-3">${e.Parcelas}</td><td class="px-6 py-3">${e.Num_Docto}<span class="block font-mono text-xs">${e.Tipo_Docto}</span></td><td class="px-6 py-3 tooltip tooltip-left"data-tip="${e.Observacoes||'N/A'}"><span data-lucide="info"class="w-5 h-5"></span></td><td class="px-6 py-3 text-right font-semibold ${parseFloat(e.Valor_em_Aberto)<0?"text-error":""}">${formatCurrency(e.Valor_em_Aberto)}</td><td><input type="checkbox"class="checkbox checkbox-accent item-checkbox"data-valor="${e.Valor_em_Aberto}"checked /></td></tr>`).join("");tableBody.insertAdjacentHTML("beforeend",r+t)});document.querySelectorAll(".group-row").forEach(r=>r.addEventListener("click",()=>toggleDetails(r.dataset.vencto)));lucide.createIcons();updateSelectedTotal()};
+    const updatePaginationControls=(d)=>{currentPageCP=parseInt(d.current_page);infoPaginaCP.textContent=`Página ${d.current_page} de ${d.num_pages}`;btnAnteriorCP.disabled=currentPageCP===1;btnProximaCP.disabled=currentPageCP===d.num_pages;[btnAnteriorCP,btnProximaCP].forEach(b=>{b.classList.toggle("opacity-50",b.disabled);b.classList.toggle("cursor-not-allowed",b.disabled)})};
+
+    // --- EVENT LISTENERS ---
+
+    downloadBtn.addEventListener('click', function() {
+      // 1. Pega os valores atuais dos filtros da aba "Contas a Pagar"
+      const startDate = document.getElementById("cp_startDate").value;
+      const finalDate = document.getElementById("cp_endDate").value;
+      // A variável `selectedFornecedores` já contém os fornecedores selecionados
+
+      // 2. Monta a URL base para a view de download
+      // IMPORTANTE: Use o nome da URL que você definiu em urls.py para o download
+      const baseUrl = "{% url 'fluxo_caixa:download_contas_aberto' %}";
+
+      // 3. Adiciona os filtros como parâmetros na URL usando URLSearchParams
+      const params = new URLSearchParams();
+      if (startDate) {
+          params.append('start_date', startDate);
+      }
+      if (finalDate) {
+          params.append('final_date', finalDate);
+      }
+      selectedFornecedores.forEach(fornecedor => {
+          params.append('fornecedor', fornecedor);
+      });
+
+      // 4. Redireciona o navegador para a URL final, o que iniciará o download
+      // O `toString()` converte os parâmetros para uma query string (ex: "start_date=...")
+      console.log("Iniciando download em:", `${baseUrl}?${params.toString()}`);
+      window.location.href = `${baseUrl}?${params.toString()}`;
+  });
+  
+    filterButton.addEventListener('click', () => fetchAndRenderTable(1));
+    btnAnteriorCP.addEventListener("click", () => { if (currentPageCP > 1) fetchAndRenderTable(currentPageCP - 1); });
+    btnProximaCP.addEventListener("click", () => { if (currentPageCP < parseInt(infoPaginaCP.textContent.split(' de ')[1])) fetchAndRenderTable(currentPageCP + 1); });
+    
+    // [NOVO VISUAL] Evento do botão de limpar
+    clearButton.addEventListener('click', () => {
+        selectedFornecedores = [];
+        renderFornecedorTags();
+        fetchAndRenderTable(1);
+    });
+
+    tableBody.addEventListener("change", (event) => {
+      if (event.target.matches(".item-checkbox")) {
+          updateSelectedTotal();
+      }
+    });
+
+    fornecedorInput.addEventListener('input', debounce((e) => fetchFornecedores(e.target.value), 300));
+
+    suggestionsContainer.addEventListener('click', (e) => {
+        if (e.target.matches('div')) {
+            const nomeFornecedor = e.target.textContent;
+            if (!selectedFornecedores.includes(nomeFornecedor)) {
+                selectedFornecedores.push(nomeFornecedor);
+                renderFornecedorTags();
+            }
+            fornecedorInput.value = '';
+            suggestionsContainer.classList.add("hidden");
+        }
+    });
+    tagsContainer.addEventListener('click', (e) => {
+        if (e.target.matches('.remove-tag-btn')) {
+            const fornecedorToRemove = e.target.dataset.fornecedor;
+            selectedFornecedores = selectedFornecedores.filter(f => f !== fornecedorToRemove);
+            renderFornecedorTags();
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (!fornecedorInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+            suggestionsContainer.classList.add("hidden");
+        }
+    });
+    fetchAndRenderTable(1);
+  }
+
+  // --- LÓGICA PARA ABA 3: FLUXO DE CAIXA ---
+  function setupFluxoDeCaixa() {
+    const tableBody = document.getElementById("tabela-corpo-fluxo");
+    const kpiElements = {
+      total_receitas: document.getElementById("kpi-receitas"),
+      total_despesas: document.getElementById("kpi-despesas"),
+      saldo_final: document.getElementById("kpi-saldo"),
+    };
+    if (!tableBody) return;
+
+    const renderFluxoTable = (data = []) => {
+      if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center">Nenhum dado encontrado.</td></tr>`;
+        return;
+      }
+      tableBody.innerHTML = data
+        .map((row) => {
+          const movimentoDia = parseFloat(row.MovimentoDia || 0);
+          const saldoAcumulado = parseFloat(row.SaldoAcumulado || 0);
+          return `<tr><td>${
+            row.Periodo
+          }</td><td class="text-right text-success">${formatCurrency(
+            row.Recebidos
+          )}</td><td class="text-right text-success/70">${formatCurrency(
+            row.Areceber
+          )}</td><td class="text-right text-error">${formatCurrency(
+            Math.abs(row.Pagamentos)
+          )}</td><td class="text-right text-error/70">${formatCurrency(
+            Math.abs(row.Apagar)
+          )}</td><td class="text-right font-bold ${
+            movimentoDia >= 0 ? "text-success" : "text-error"
+          }">${formatCurrency(
+            movimentoDia
+          )}</td><td class="text-right font-bold ${
+            saldoAcumulado >= 0 ? "text-info" : "text-error"
+          }">${formatCurrency(saldoAcumulado)}</td></tr>`;
+        })
+        .join("");
+    };
+
+    const updateFluxoKpis = (kpis = {}) => {
+      kpiElements.total_receitas.textContent = formatCurrency(
+        kpis.total_receitas || 0
+      );
+      kpiElements.total_despesas.textContent = formatCurrency(
+        kpis.total_despesas || 0
+      );
+      kpiElements.saldo_final.textContent = formatCurrency(
+        kpis.saldo_final || 0
+      );
+    };
+
+    const fetchAndRenderFluxo = async () => {
+      tableBody.innerHTML = `<tr><td colspan="7" class="py-8 text-center"><span class="loading loading-spinner"></span></td></tr>`;
+      const startDate = document.getElementById("fc_startDate").value;
+      const endDate = document.getElementById("fc_endDate").value;
+      const granularity = document.getElementById("fc_granularity").value;
+      const apiUrl = `{% url 'fluxo_caixa:fluxo_caixa_api_view' %}?startdate=${startDate}&finaldate=${endDate}&granularity=${granularity}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok)
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        const apiData = await response.json();
+        renderFluxoTable(apiData.data);
+        updateFluxoKpis(apiData.kpis);
+      } catch (error) {
+        console.error("Erro ao buscar dados do fluxo de caixa:", error);
+        renderFluxoTable([]);
+        updateFluxoKpis();
+      }
+    };
+
+    document
+      .getElementById("fc_filterButton")
+      .addEventListener("click", fetchAndRenderFluxo);
+    fetchAndRenderFluxo();
+  }
+</script>
+{% endblock %}

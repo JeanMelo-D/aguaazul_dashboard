@@ -2,7 +2,7 @@ import polars as pl
 from datetime import datetime, timedelta, date
 from decimal import Decimal
 from .utilitarios import date_func
-from .azure_financial import azul_contas_bancarias, azul_doc_a_pagar, azul_doc_pagos, azul_doc_recebidos, azul_doc_a_receber
+from .azure_financial import azul_contas_bancarias, azul_doc_a_pagar, azul_doc_pagos, azul_doc_recebidos, azul_doc_a_receber, azul_doc_partner
 import calendar
 import locale
 
@@ -12,6 +12,10 @@ DECIMAL_15_2 = pl.Decimal(15, 2)
 ZERO_DECIMAL = pl.lit("0.00").cast(DECIMAL_15_2)
 
 
+
+def azul_fornecedores_lazy() -> pl.LazyFrame:
+    azul_df_partner =azul_doc_partner().lazy()
+    return azul_df_partner
 
 def a_receber_setup_lazy() -> pl.LazyFrame:
     # A variável aqui dentro deve ser local, usando a_receber do escopo global.
@@ -40,8 +44,6 @@ def a_receber_setup_lazy() -> pl.LazyFrame:
         pl.col("Total_Previsto").cast(DECIMAL_15_2)
     ])
 
-
-
 def recebidos_setup_lazy() -> pl.LazyFrame:
     recebidos = azul_doc_recebidos().lazy()
     return recebidos.select([
@@ -69,8 +71,7 @@ def recebidos_setup_lazy() -> pl.LazyFrame:
         pl.col("Tipo_Docto2").cast(pl.String),
         pl.col("docentry").cast(pl.String)
     ])
-    
- 
+
 def abertos_setup_lazy() -> pl.LazyFrame:  
     abertos = azul_doc_a_pagar().lazy() 
     return abertos.select([
@@ -130,7 +131,6 @@ def pagos_setup_lazy() -> pl.LazyFrame:
         pl.col('Centro_Custo').cast(pl.String),
     ])
 
-
 def contas_setup_lazy() -> pl.LazyFrame:
     contas = azul_contas_bancarias().lazy()
     return contas.select([
@@ -153,6 +153,55 @@ def contas_setup_lazy() -> pl.LazyFrame:
         pl.col('U_IB_ItemFluxo').cast(pl.String),
         pl.col('CashBox').cast(pl.String),
     ])
+
+def cp_em_abertos(
+    start_date: str = None,
+    final_date: str = None,
+    fornecedores: list = None,  # 1. Alterado de 'fornecedor: str' para 'fornecedores: list'
+) -> pl.DataFrame:              # 2. Alterado o tipo de retorno para DataFrame, pois .collect() é usado
+    
+    meses_pt = {
+        1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril",
+        5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto",
+        9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"
+    }
+    
+    df = azul_doc_a_pagar().lazy()
+    
+    # 3. A lógica de filtro agora usa a lista 'fornecedores' e o método .is_in()
+    if fornecedores: 
+        df = df.filter(
+            pl.col("Razao_Social").is_in(fornecedores)
+        )
+        
+    if start_date:
+        dt_inicial = datetime.strptime(start_date, "%Y-%m-%d")
+        df = df.filter(pl.col('Vencimento') >= dt_inicial)
+
+    if final_date:
+        dt_final = datetime.strptime(final_date, "%Y-%m-%d")
+        df = df.filter(pl.col('Vencimento') <= dt_final)
+
+    df = df.select(
+        pl.col('Vencimento').dt.strftime("%d/%m/%Y").alias('Vencto'),
+        pl.col('Vencimento').dt.month().cast(pl.String).replace(meses_pt).alias('Mes'),
+        pl.col('Vencimento').dt.year().cast(pl.String).alias('Ano'),
+        pl.col('Razao_Social').cast(pl.String),
+        pl.col('Tipo_Docto').cast(pl.String),
+        pl.col('Num_Docto'),
+        pl.col('Emissao').dt.strftime("%d/%m/%Y").alias('Emissao'),
+        pl.concat_str(
+            [pl.col('Parcela').cast(pl.String), pl.col('Total_Parcelas').cast(pl.String)],
+            separator="/"
+        ).alias('Parcelas'),
+        pl.col('Valor_em_Aberto').cast(DECIMAL_15_2),
+        pl.col('Observacoes'),
+        pl.col('BPLName'),
+        pl.col('Vencimento'), 
+    )
+    df = df.sort('Vencimento')
+   
+    return df.collect()
 
 def timeline_financeiro_v2_eficiente(
     lazy_abertos: pl.LazyFrame,
@@ -268,7 +317,6 @@ def _formatar_moeda_brl(valor: float | Decimal | None) -> str:
     s = s.replace(",", "X").replace(".", ",").replace("X", ".")
     return s
 
-
 def financeiro_kpis(lazy_abertos: pl.LazyFrame) -> dict:
     periodos = _get_periodos_meses_futuros(num_meses=6)
     
@@ -298,7 +346,6 @@ def financeiro_kpis(lazy_abertos: pl.LazyFrame) -> dict:
 
             
     return kpis
-
 
 def _build_fluxo_caixa_base_lazy() -> pl.LazyFrame:
     pagos_fmt = pagos_setup_lazy().select(

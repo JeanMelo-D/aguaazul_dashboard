@@ -17,8 +17,6 @@ class Auth:
             df = pl.read_parquet(f)
         return df
 
-
-# Instância do leitor
 reader = Auth()
 
 def azul_doc_a_pagar() -> pl.LazyFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_contas_a_pagar.parquet")
@@ -26,6 +24,7 @@ def azul_contas_bancarias() -> pl.LazyFrame:return reader.reading(config("AZL_DA
 def azul_doc_pagos() -> pl.LazyFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_documentos_pagos.parquet")
 def azul_doc_recebidos() -> pl.LazyFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_documentos_recebidos.parquet")
 def azul_doc_a_receber() -> pl.LazyFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_documentos_a_receber.parquet")
+def azul_doc_partner() -> pl.LazyFrame:return reader.reading(config("AZL_DASG_FINAN")+"/Extracao_parceiros_negocios.parquet")
 
 
 

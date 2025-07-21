@@ -19,14 +19,16 @@ SECRET_KEY = config('SECRET_KEY')
 
  ## Em prod descomentar essa opção
  ## precisa apagar a pasta staticfiles em developmente
+
+# COMENTAR PARA PROD
+# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd" ## COMENTAR PARA PRODUÇÃO  
  
-# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd" ## COMENTAR PARA PRODUÇÃO 
- 
-STATIC_ROOT = BASE_DIR / 'staticfiles'           
+# DESCOMENTAR PARA PROD
+STATIC_ROOT = BASE_DIR / 'staticfiles'   
 
 # O config('DEBUG', default=False, cast=bool) permite ligá-lo em desenvolvimento com um .env
 
-# DEBUG = True  --em dev comentar o abaixo
+# DEBUG = True  ##--em dev descomentar o abaixo
 DEBUG = config('DEBUG', default=False, cast=bool)          
 
 # Adiciona os domínios que podem acessar sua aplicação.
@@ -59,7 +61,7 @@ INSTALLED_APPS = [
     'pipeline',
     'data',
     'maps',
-    # 'django_browser_reload', # REMOVIDO: Ferramenta apenas para desenvolvimento.
+    # 'django_browser_reload', # REMOVIDO: comentar para prod
 ]
 
 MIDDLEWARE = [
@@ -99,16 +101,10 @@ TEMPLATES = [
 
 TAILWIND_APP_NAME = 'ninetail'
 
-# ✅ REMOVIDO: NPM_BIN_PATH não é necessário e causaria erro no Azure (Linux).
-# A biblioteca django-tailwind encontrará o npm automaticamente no ambiente de build.
-
 # ==============================================================================
 # BANCO DE DADOS
 # ==============================================================================
 
-# ✅ CONFIGURAÇÃO DE BANCO DE DADOS PRONTA PARA PRODUÇÃO
-# Em produção, usará a variável de ambiente DATABASE_URL.
-# Em desenvolvimento, se não encontrar a variável, usará o SQLite.
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
@@ -143,10 +139,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'ninetail/static'
 ]
 
-# # Pasta de destino para onde o `collectstatic` irá copiar todos os arquivos.
-# STATIC_ROOT = BASE_DIR / 'staticfiles'  ## DESCOMENTAR SOMENTE EM PRODUÇÃO
-
-
 # Mecanismo de armazenamento para o WhiteNoise, que comprime e versiona os arquivos.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -164,8 +156,6 @@ CORS_ALLOWED_ORIGINS = [
 # ==============================================================================
 # CONFIGURAÇÕES GERAIS
 # ==============================================================================
-
-
 
 # config/settings.py
 

@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html lang="pt-br" data-theme="dark">
 
+
+
   {% comment %} tema padrão: "forest" pindorama {% endcomment %}
   {% comment %} tema padrão: "dark" Aguaazul {% endcomment %}
 <head>
@@ -10,8 +12,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Dashboard - Água Azul {% endblock %}</title>
 
-
     <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
       body {
@@ -32,7 +34,6 @@
     {% include 'partials/_sidebar.html' %}
 
     <div class="main-content">
-        {% include 'partials/_header.html' %}
 
         <main class="flex-grow p-4 lg:p-8">
             {% block content %}

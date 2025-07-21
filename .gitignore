@@ -1,6 +1,7 @@
 # Arquivo de variáveis de ambiente (contém segredos)
 .env
-consultas.sql
+D.sql
+testes.js      
 
 # Arquivos de cache do Python
 __pycache__/

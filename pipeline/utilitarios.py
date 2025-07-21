@@ -64,8 +64,6 @@ def fluxodatas (data_para_checar: date) -> pl.DataFrame:
             "ano_ref": ano
         }
 
-    # Caso 2: A data está entre o dia 21 e o fim do mês.
-    # Pertence ao início do "Segundo Período" do mês da própria data.
     elif dia >= 21:
         return {
             "periodo": "Segundo Período",
@@ -73,8 +71,6 @@ def fluxodatas (data_para_checar: date) -> pl.DataFrame:
             "ano_ref": ano
         }
         
-    # Caso 3 (o mais complexo): A data está entre o dia 1 e 10.
-    # Pertence ao final do "Segundo Período" que começou no MÊS ANTERIOR.
     elif 1 <= dia <= 10:
         # Precisamos calcular qual era o mês/ano anterior
         data_mes_anterior = data_para_checar - timedelta(days=dia + 1) # Forma segura de voltar para o mês anterior
