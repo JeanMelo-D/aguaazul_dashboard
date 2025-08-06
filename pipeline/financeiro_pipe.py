@@ -93,6 +93,7 @@ def abertos_setup_lazy() -> pl.LazyFrame:
         pl.col('Observacoes').cast(pl.String),
         pl.col('BPLId').cast(pl.Int64),
         pl.col('BPLName').cast(pl.String),
+        pl.col('Modalidade').cast(pl.String),
         pl.col('Cod_Custo').cast(pl.Int64),
 
     ])
@@ -198,6 +199,8 @@ def cp_em_abertos(
         pl.col('Observacoes'),
         pl.col('BPLName'),
         pl.col('Vencimento'), 
+        pl.col('Modalidade'),
+        pl.col('Cod_Custo').cast(pl.String),
     )
     df = df.sort('Vencimento')
    
